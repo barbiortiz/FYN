@@ -1,0 +1,974 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Forrin · Bienestar y Salud Sexual</title>
+<meta name="description" content="Información confiable sobre salud sexual, métodos anticonceptivos, ITS y hospitales públicos en Argentina, con Forrin.">
+<style>
+/* =========================================================
+   FORRIN · styles.css (INCRUSTADO)
+   Mobile-first, paleta obligatoria: #ffff00 #e6007d #000 #fff
+   ========================================================= */
+
+:root {
+  --yellow: #ffff00;
+  --magenta: #e6007d;
+  --black: #000000;
+  --white: #ffffff;
+
+  /* combinaciones que cumplen WCAG AA (texto normal >= 4.5:1) */
+  --text-on-yellow: var(--black);   /* ~19:1  */
+  --text-on-magenta: var(--white);  /* ~4.9:1 */
+  --text-on-white: var(--black);    /* 21:1   */
+  --text-on-black: var(--white);    /* 21:1   */
+
+  --radius-pill: 999px;
+  --radius-card: 16px;
+  --space-1: 0.5rem;
+  --space-2: 1rem;
+  --space-3: 1.5rem;
+  --space-4: 2.5rem;
+
+  --focus-ring: 3px solid var(--magenta);
+
+  --font-base: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  font-family: var(--font-base);
+  background: var(--white);
+  color: var(--black);
+  line-height: 1.5;
+}
+
+img, svg { max-width: 100%; display: block; }
+
+/* ---------- Accesibilidad: utilitarias ---------- */
+.visually-hidden {
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden;
+  clip: rect(0,0,0,0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.skip-link {
+  position: absolute;
+  left: -999px;
+  top: 0;
+  background: var(--black);
+  color: var(--white);
+  padding: var(--space-1) var(--space-2);
+  z-index: 100;
+}
+.skip-link:focus {
+  left: var(--space-1);
+  top: var(--space-1);
+}
+
+:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}
+
+/* ---------- Header ---------- */
+.site-header {
+  background: var(--black);
+  color: var(--white);
+  padding: var(--space-2) var(--space-3);
+  text-align: center;
+}
+.brand { display: flex; align-items: center; justify-content: center; gap: var(--space-1); }
+.brand-mark { color: var(--magenta); font-size: 1.4rem; }
+.brand-name { font-weight: 800; font-size: clamp(1.25rem, 4vw, 1.75rem); letter-spacing: 0.02em; }
+.brand-tagline { margin: var(--space-1) 0 0; color: var(--yellow); font-size: 0.9rem; }
+
+/* ---------- Hero + Forrin ---------- */
+.hero {
+  padding: var(--space-3) var(--space-2) var(--space-4);
+  background: linear-gradient(180deg, var(--white) 0%, #fff9e6 100%);
+}
+
+.hero-stage {
+  max-width: 480px;
+  margin: 0 auto;
+  text-align: center;
+  position: relative;
+}
+
+.forrin-figure { margin: 0 auto var(--space-2); width: min(55vw, 200px); }
+
+.hero-title {
+  font-size: clamp(1.5rem, 5vw, 2.25rem);
+  margin: 0 0 var(--space-1);
+}
+.hero-title .highlight {
+  color: var(--magenta);
+}
+.hero-subtitle {
+  margin: 0 0 var(--space-3);
+  font-size: 1rem;
+}
+
+/* --- Pills: mobile-first = grid apilado --- */
+.pill-nav { width: 100%; }
+.pill-list {
+  list-style: none;
+  margin: 0; padding: 0;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-1);
+}
+.pill-list li:first-child { grid-column: 1 / -1; }
+
+.pill {
+  width: 100%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  font: inherit;
+  font-weight: 700;
+  font-size: 0.9rem;
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius-pill);
+  border: 3px solid var(--black);
+  background: var(--yellow);
+  color: var(--text-on-yellow);
+  cursor: pointer;
+  transition: transform 0.15s ease, background 0.15s ease;
+}
+.pill:hover { transform: translateY(-2px); }
+.pill[aria-selected="true"] {
+  background: var(--magenta);
+  color: var(--text-on-magenta);
+  border-color: var(--black);
+}
+
+/* --- Desktop/tablet: pills en anillo alrededor de Forrin --- */
+@media (min-width: 760px) {
+  .hero-stage {
+    max-width: 620px;
+    padding-top: var(--space-4);
+  }
+  .forrin-figure {
+    width: 220px;
+    position: relative;
+    z-index: 2;
+  }
+  .pill-list {
+    display: block;
+    position: absolute;
+    inset: 0;
+  }
+  .pill-list li {
+    position: absolute;
+    top: 50%; left: 50%;
+    --radius: 230px;
+    transform: translate(-50%, -50%) rotate(var(--angle)) translate(var(--radius)) rotate(calc(-1 * var(--angle)));
+    width: 190px;
+  }
+  .hero-title, .hero-subtitle { position: relative; z-index: 3; }
+}
+
+/* ---------- Panels ---------- */
+.content-panel {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: var(--space-4) var(--space-2);
+}
+.content-panel h2 {
+  color: var(--magenta);
+  font-size: clamp(1.4rem, 4vw, 2rem);
+}
+
+.disclaimer {
+  background: var(--yellow);
+  color: var(--text-on-yellow);
+  border: 3px solid var(--black);
+  border-radius: var(--radius-card);
+  padding: var(--space-2);
+  font-size: 0.9rem;
+}
+
+/* ---------- Chat ---------- */
+.chat-window {
+  border: 3px solid var(--black);
+  border-radius: var(--radius-card);
+  min-height: 220px;
+  max-height: 420px;
+  overflow-y: auto;
+  padding: var(--space-2);
+  margin: var(--space-2) 0;
+  background: var(--white);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.msg {
+  max-width: 85%;
+  padding: 0.6rem 0.9rem;
+  border-radius: 14px;
+  border: 2px solid var(--black);
+}
+.msg.bot {
+  background: var(--white);
+  align-self: flex-start;
+}
+.msg.user {
+  background: var(--magenta);
+  color: var(--text-on-magenta);
+  align-self: flex-end;
+}
+
+.chat-form {
+  display: flex;
+  gap: var(--space-1);
+  flex-wrap: wrap;
+}
+.chat-form input {
+  flex: 1 1 200px;
+  padding: 0.7rem;
+  border: 3px solid var(--black);
+  border-radius: var(--radius-pill);
+  font: inherit;
+}
+.chat-form button {
+  padding: 0.7rem 1.4rem;
+  border-radius: var(--radius-pill);
+  border: 3px solid var(--black);
+  background: var(--black);
+  color: var(--white);
+  font-weight: 700;
+  cursor: pointer;
+}
+.chat-form button:hover { background: var(--magenta); }
+
+.faq-list { list-style: none; padding: 0; display: grid; gap: var(--space-1); }
+.faq-list button {
+  width: 100%;
+  text-align: left;
+  padding: 0.7rem 1rem;
+  border-radius: 10px;
+  border: 2px solid var(--black);
+  background: var(--white);
+  cursor: pointer;
+  font: inherit;
+}
+.faq-list button:hover { background: #fff6cc; }
+
+/* ---------- Cards (métodos) ---------- */
+.card-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-2);
+}
+@media (min-width: 640px) {
+  .card-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (min-width: 960px) {
+  .card-grid { grid-template-columns: repeat(3, 1fr); }
+}
+.card {
+  border: 3px solid var(--black);
+  border-radius: var(--radius-card);
+  padding: var(--space-2);
+  background: var(--white);
+}
+.card h3 { color: var(--magenta); margin-top: 0; }
+.card .tag {
+  display: inline-block;
+  background: var(--yellow);
+  color: var(--text-on-yellow);
+  border-radius: var(--radius-pill);
+  padding: 0.15rem 0.7rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+/* ---------- ITS / Derechos ---------- */
+.info-block {
+  border-left: 6px solid var(--magenta);
+  padding-left: var(--space-2);
+  margin-bottom: var(--space-3);
+}
+.info-block h3 { margin-top: 0; }
+
+/* ---------- Hospitales ---------- */
+.filter-bar {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  max-width: 320px;
+  margin-bottom: var(--space-2);
+}
+.filter-bar select {
+  padding: 0.6rem;
+  border: 3px solid var(--black);
+  border-radius: 10px;
+  font: inherit;
+}
+
+.hospital-list { list-style: none; padding: 0; display: grid; gap: var(--space-2); }
+.hospital-card {
+  border: 3px solid var(--black);
+  border-radius: var(--radius-card);
+  padding: var(--space-2);
+}
+.hospital-card h3 { margin: 0 0 0.3rem; color: var(--magenta); }
+.hospital-card .services {
+  display: flex; flex-wrap: wrap; gap: 0.4rem;
+  margin-top: 0.6rem;
+}
+.hospital-card .services span {
+  background: var(--black);
+  color: var(--white);
+  border-radius: var(--radius-pill);
+  padding: 0.2rem 0.7rem;
+  font-size: 0.75rem;
+}
+.hospital-card a { color: var(--magenta); font-weight: 700; }
+
+/* ---------- Footer ---------- */
+.site-footer {
+  background: var(--black);
+  color: var(--white);
+  padding: var(--space-3) var(--space-2);
+  text-align: center;
+  font-size: 0.85rem;
+}
+.site-footer .sources { color: #ccc; margin-top: var(--space-1); }
+</style>
+</head>
+<body>
+
+  <a class="skip-link" href="#main-content">Saltar al contenido principal</a>
+
+  <header class="site-header">
+    <div class="brand">
+      <span class="brand-mark" aria-hidden="true">✚</span>
+      <span class="brand-name">Forrin</span>
+    </div>
+    <p class="brand-tagline">Bienestar y salud sexual, sin vueltas</p>
+  </header>
+
+  <main id="main-content">
+
+    <!-- ===== HERO: Forrin + navegación en pills ===== -->
+    <section class="hero" aria-label="Presentación">
+      <div class="hero-stage">
+
+        <!-- Forrin: mascota nueva -->
+        <figure class="forrin-figure" aria-hidden="true">
+          <img src="forrin.jpg" alt="Forrin" style="width: 100%; height: auto;">
+        </figure>
+
+        <h1 class="hero-title">
+          Hola, soy <span class="highlight">Forrin</span>
+        </h1>
+        <p class="hero-subtitle">Tu guía de bienestar y salud sexual. Elegí un tema:</p>
+
+        <!-- Navegación tipo "pills" alrededor de Forrin -->
+        <nav class="pill-nav" aria-label="Secciones principales" role="tablist">
+          <ul class="pill-list">
+            <li style="--angle:-90deg">
+              <button class="pill" role="tab" id="tab-chat" aria-controls="panel-chat" aria-selected="true" data-target="panel-chat">
+                <span aria-hidden="true">💬</span> Preguntale a Forrin
+              </button>
+            </li>
+            <li style="--angle:-18deg">
+              <button class="pill" role="tab" id="tab-metodos" aria-controls="panel-metodos" aria-selected="false" tabindex="-1" data-target="panel-metodos">
+                <span aria-hidden="true">💊</span> Métodos anticonceptivos
+              </button>
+            </li>
+            <li style="--angle:54deg">
+              <button class="pill" role="tab" id="tab-its" aria-controls="panel-its" aria-selected="false" tabindex="-1" data-target="panel-its">
+                <span aria-hidden="true">🛡️</span> ITS y prevención
+              </button>
+            </li>
+            <li style="--angle:126deg">
+              <button class="pill" role="tab" id="tab-derechos" aria-controls="panel-derechos" aria-selected="false" tabindex="-1" data-target="panel-derechos">
+                <span aria-hidden="true">⚖️</span> Tus derechos
+              </button>
+            </li>
+            <li style="--angle:198deg">
+              <button class="pill" role="tab" id="tab-hospitales" aria-controls="panel-hospitales" aria-selected="false" tabindex="-1" data-target="panel-hospitales">
+                <span aria-hidden="true">📍</span> Hospitales públicos
+              </button>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </section>
+
+    <!-- ===== PANEL: Chatbot / Preguntas frecuentes ===== -->
+    <section id="panel-chat" class="content-panel" role="tabpanel" aria-labelledby="tab-chat">
+      <h2>Preguntale a Forrin</h2>
+      <p class="disclaimer">
+        Forrin da información general basada en fuentes oficiales. No reemplaza una consulta médica.
+        Ante una urgencia, llamá al <strong>911</strong> o acercate a la guardia más cercana.
+      </p>
+
+      <div class="chat-window" id="chat-window" aria-live="polite" aria-atomic="false">
+        <!-- los mensajes se insertan acá vía JS -->
+      </div>
+
+      <form id="chat-form" class="chat-form">
+        <label for="chat-input" class="visually-hidden">Escribí tu consulta</label>
+        <input type="text" id="chat-input" name="chat-input" placeholder="Ej: ¿cómo consigo preservativos gratis?" autocomplete="off">
+        <button type="submit">Enviar</button>
+      </form>
+
+      <div class="quick-questions">
+        <h3>Preguntas frecuentes</h3>
+        <ul id="faq-list" class="faq-list"><!-- render JS --></ul>
+      </div>
+    </section>
+
+    <!-- ===== PANEL: Métodos anticonceptivos ===== -->
+    <section id="panel-metodos" class="content-panel" role="tabpanel" aria-labelledby="tab-metodos" hidden>
+      <h2>Métodos anticonceptivos</h2>
+      <p>Todos son de acceso libre y gratuito en hospitales públicos, centros de salud, obras sociales y prepagas (Ley 25.673). El mejor método es el que vos elegís junto a un equipo de salud.</p>
+      <div id="metodos-grid" class="card-grid"><!-- render JS --></div>
+    </section>
+
+    <!-- ===== PANEL: ITS / Sífilis ===== -->
+    <section id="panel-its" class="content-panel" role="tabpanel" aria-labelledby="tab-its" hidden>
+      <h2>Infecciones de transmisión sexual (ITS)</h2>
+      <div id="its-content"><!-- render JS --></div>
+    </section>
+
+    <!-- ===== PANEL: Derechos / Normativa ===== -->
+    <section id="panel-derechos" class="content-panel" role="tabpanel" aria-labelledby="tab-derechos" hidden>
+      <h2>Tus derechos</h2>
+      <div id="derechos-content"><!-- render JS --></div>
+    </section>
+
+    <!-- ===== PANEL: Hospitales ===== -->
+    <section id="panel-hospitales" class="content-panel" role="tabpanel" aria-labelledby="tab-hospitales" hidden>
+      <h2>Hospitales públicos para hacerte análisis</h2>
+      <p>Listado de referencia con centros que ofrecen testeo de VIH/sífilis y consejería en salud sexual. No es exhaustivo: confirmá horarios llamando antes de ir.</p>
+
+      <div class="filter-bar">
+        <label for="province-filter">Filtrar por provincia</label>
+        <select id="province-filter">
+          <option value="todas">Todas</option>
+        </select>
+      </div>
+
+      <ul id="hospitales-list" class="hospital-list"><!-- render JS --></ul>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <p><strong>Línea Salud Sexual:</strong> 0800-222-3444 (consultas confidenciales y gratuitas) · <strong>Línea 144:</strong> atención a víctimas de violencia de género</p>
+    <p class="sources">Contenido basado en: Ministerio de Salud (Preguntas frecuentes y Métodos anticonceptivos), ANAC (Sífilis), y Ley 26.150 de Educación Sexual Integral — argentina.gob.ar</p>
+  </footer>
+
+<script>
+/* =========================================================
+   FORRIN · knowledge-base.js (INCRUSTADO)
+   ========================================================= */
+
+const FAQ_DB = [
+  {
+    id: "consulta",
+    question: "¿Dónde puedo consultar sobre salud sexual?",
+    keywords: ["consulta", "consultar", "donde", "asesoramiento", "informacion", "dudas"],
+    answer: "Podés consultar gratis en cualquier centro de salud u hospital público, o llamar a la Línea Salud Sexual 0800-222-3444 (confidencial y gratuita). Cada provincia además tiene su propio programa de salud sexual."
+  },
+  {
+    id: "metodos-acceso",
+    question: "¿Cómo consigo métodos anticonceptivos gratis?",
+    keywords: ["metodo", "anticonceptivo", "gratis", "gratuito", "conseguir", "acceso", "pastillas"],
+    answer: "La Ley 25.673 garantiza el acceso gratuito a métodos anticonceptivos en hospitales y centros de salud públicos, y también deben entregarlos las obras sociales y prepagas. Las opciones incluyen preservativos, pastillas, inyectables, DIU, implante subdérmico, anticoncepción de emergencia y anticoncepción quirúrgica. El mejor método es el que vos elegís junto a un profesional."
+  },
+  {
+    id: "preservativo",
+    question: "¿Por qué se recomienda siempre el preservativo?",
+    keywords: ["preservativo", "condon", "proteccion", "doble proteccion"],
+    answer: "El preservativo es el único método que, además de prevenir el embarazo, protege de infecciones de transmisión sexual (ITS) y VIH. Por eso se recomienda la 'doble protección': preservativo + otro método, para sumar efectividad anticonceptiva y prevención de ITS."
+  },
+  {
+    id: "quirurgica",
+    question: "¿Cómo accedo a vasectomía o ligadura tubaria?",
+    keywords: ["vasectomia", "ligadura", "quirurgica", "esterilizacion", "trompas"],
+    answer: "Son métodos permanentes y de difícil reversión. Se accede en hospitales públicos, obras sociales y prepagas (Ley 26.130), siendo mayor de edad. Se requiere una consulta médica, recibir información sobre este y otros métodos, y dejar la decisión por escrito. No hace falta haber tenido hijos ni autorización de la pareja."
+  },
+  {
+    id: "adolescentes",
+    question: "¿Qué derechos tienen los adolescentes en salud sexual?",
+    keywords: ["adolescente", "menor", "edad", "13 años", "16 años", "joven"],
+    answer: "Menores de 13 años: derecho a ser escuchados, recibir información y acceder a anticonceptivos, con consentimiento asistido por un adulto. De 13 a 16 años: pueden elegir método anticonceptivo de forma autónoma, sin acompañamiento de un adulto. Desde los 16 años: capacidad plena para decidir sobre el cuidado del propio cuerpo, como una persona adulta."
+  },
+  {
+    id: "ive-ile",
+    question: "¿Cuándo se puede acceder a una interrupción del embarazo?",
+    keywords: ["aborto", "interrupcion", "embarazo", "ive", "ile"],
+    answer: "Desde 2021 rige la Ley 27.610: la Interrupción Voluntaria del Embarazo (IVE) se puede solicitar hasta la semana 14 inclusive. Después de esa semana, la Interrupción Legal del Embarazo (ILE) procede si el embarazo es producto de una violación o si está en riesgo la vida o la salud de la persona gestante. Para orientarte sobre dónde consultar, podés llamar al 0800-222-3444."
+  },
+  {
+    id: "discapacidad",
+    question: "¿Qué derechos sexuales tienen las personas con discapacidad?",
+    keywords: ["discapacidad", "derechos"],
+    answer: "Los mismos derechos sexuales y reproductivos que cualquier persona. La idea de que las personas con discapacidad 'no tienen sexualidad' o no pueden decidir sobre su cuerpo es falsa y discriminatoria."
+  },
+  {
+    id: "sifilis-que-es",
+    question: "¿Qué es la sífilis?",
+    keywords: ["sifilis", "its", "infeccion de transmision sexual"],
+    answer: "Es una infección de transmisión sexual causada por una bacteria (Treponema pallidum). Si no se trata a tiempo puede avanzar y afectar piel, corazón y sistema nervioso. En Argentina los casos vienen en aumento marcado en los últimos años, por eso el testeo regular es tan importante."
+  },
+  {
+    id: "sifilis-sintomas",
+    question: "¿Qué síntomas tiene la sífilis?",
+    keywords: ["sintomas", "chancro", "llaga", "erupcion", "sifilis sintomas"],
+    answer: "Puede no dar síntomas visibles. En la fase primaria aparece una úlcera indolora (chancro) que cicatriza sola, aunque la infección sigue. En la fase secundaria puede haber erupción en piel (típica en palmas y plantas), fiebre y ganglios inflamados: es la etapa de mayor contagio. También existe una fase latente sin síntomas."
+  },
+  {
+    id: "sifilis-prevencion",
+    question: "¿Cómo me hago un test de sífilis o VIH?",
+    keywords: ["prevenir", "prevencion", "testeo", "test", "hacerme un test"],
+    answer: "Se recomienda testearte aunque no tengas síntomas, especialmente si tuviste una pareja nueva, relaciones sin preservativo o tu pareja tuvo alguna ITS. Hay tests rápidos con resultado en menos de 30 minutos, disponibles gratis en hospitales públicos y centros de salud. Mirá la sección 'Hospitales públicos' de esta app para encontrar uno cerca."
+  },
+  {
+    id: "sifilis-tratamiento",
+    question: "¿La sífilis tiene cura?",
+    keywords: ["tratamiento", "cura", "penicilina", "se cura"],
+    answer: "Sí, la sífilis se cura. El tratamiento estándar es con penicilina benzatínica, indicada por un profesional de salud. Si tuviste un resultado positivo, tu pareja o parejas sexuales también deben evaluarse y tratarse para cortar la cadena de contagio."
+  },
+  {
+    id: "esi",
+    question: "¿Qué es la Educación Sexual Integral (ESI)?",
+    keywords: ["esi", "educacion sexual", "escuela", "ley 26150"],
+    answer: "La Ley 26.150 establece que todos los estudiantes, en escuelas públicas y privadas de todo el país, tienen derecho a recibir Educación Sexual Integral: contenidos biológicos, psicológicos, sociales, afectivos y éticos, con información confiable y actualizada, desde el nivel inicial hasta la formación docente."
+  },
+  {
+    id: "violencia",
+    question: "Sufrí una situación de abuso o violencia, ¿qué hago?",
+    keywords: ["abuso", "violacion", "violencia", "obligaron", "forzaron", "no consenti"],
+    answer: "Lo que te pasó no es tu responsabilidad y no tenés que atravesarlo sola/o. Podés llamar a la Línea 144 (atención a víctimas de violencia de género, las 24 horas) o acercarte a la guardia de cualquier hospital público. Si el hecho fue reciente, un hospital también puede orientarte sobre anticoncepción de emergencia y, si corresponde, sobre la Interrupción Legal del Embarazo (Ley 27.610)."
+  }
+];
+
+const METODOS_DB = [
+  { nombre: "Preservativo", tag: "Único que previene ITS", desc: "Método de barrera. Se usa desde el inicio hasta el final de la relación (vaginal, anal u oral). Revisá vencimiento y usá lubricante a base de agua." },
+  { nombre: "Pastillas combinadas", tag: "Hormonal diario", desc: "Combinan dos hormonas. Se toman una vez por día; requieren regularidad para ser efectivas." },
+  { nombre: "Pastillas de una sola hormona", tag: "Hormonal diario", desc: "Conocida como minipíldora. Alternativa para personas que no pueden tomar estrógeno, por ejemplo durante la lactancia." },
+  { nombre: "Inyectables", tag: "Mensual o trimestral", desc: "Aplicación hormonal cada 1 o cada 3 meses, según el tipo, en un centro de salud." },
+  { nombre: "DIU", tag: "Larga duración", desc: "Dispositivo intrauterino colocado por un profesional de salud. Protege por varios años y es reversible." },
+  { nombre: "Implante subdérmico", tag: "Larga duración", desc: "Varilla pequeña que se coloca bajo la piel del brazo. Libera hormonas de forma gradual durante varios años." },
+  { nombre: "Anticoncepción hormonal de emergencia (AHE)", tag: "Uso ocasional", desc: "Se usa después de una relación sin protección o ante una falla del método habitual. Cuanto antes se tome, más efectiva es. No reemplaza un método regular." },
+  { nombre: "Ligadura tubaria", tag: "Método permanente", desc: "Cirugía que impide el paso de óvulos al útero. Es de difícil reversión; se accede siendo mayor de edad (Ley 26.130)." },
+  { nombre: "Vasectomía", tag: "Método permanente", desc: "Cirugía que corta o liga los conductos deferentes. Es de difícil reversión; se accede siendo mayor de edad (Ley 26.130)." }
+];
+
+const ITS_INFO = {
+  intro: "Las infecciones de transmisión sexual (ITS) se contagian principalmente por contacto sexual sin preservativo. Muchas, como la sífilis, pueden no dar síntomas visibles durante un tiempo, por eso el testeo regular es clave.",
+  bloques: [
+    {
+      titulo: "Sífilis: en aumento en Argentina",
+      texto: "En 2025 se confirmaron 55.183 diagnósticos de sífilis en el país, la cifra más alta de los últimos 5 años (+71% respecto del período 2020-2024). También crecieron los casos en personas embarazadas y la sífilis congénita en bebés, por eso el control prenatal con testeo es obligatorio en el primer y el tercer trimestre."
+    },
+    {
+      titulo: "Cómo se contagia",
+      texto: "Por contacto directo con lesiones (a veces invisibles) en relaciones vaginales, anales u orales sin preservativo. También puede transmitirse de madre a bebé durante el embarazo o el parto si no hubo tratamiento. El período de incubación va de 10 a 90 días."
+    },
+    {
+      titulo: "Síntomas posibles",
+      texto: "Fase primaria: una úlcera indolora (chancro) que cicatriza sola aunque la infección continúa. Fase secundaria: erupción en piel (palmas y plantas), fiebre, ganglios inflamados — la etapa de mayor contagio. Fase latente: sin síntomas visibles, con riesgo de complicaciones si no se trata."
+    },
+    {
+      titulo: "Prevención y testeo",
+      texto: "Usar preservativo en toda relación sexual, revisar su vencimiento y usar lubricante a base de agua. Testearte regularmente, en especial ante parejas nuevas o relaciones sin protección: hay test rápidos con resultado en menos de 30 minutos, gratuitos en hospitales públicos."
+    },
+    {
+      titulo: "Tratamiento",
+      texto: "La sífilis se cura con penicilina benzatínica indicada por un profesional. Si el resultado es positivo, la pareja o parejas sexuales también deben evaluarse y tratarse para cortar la cadena de transmisión."
+    }
+  ]
+};
+
+const DERECHOS_INFO = [
+  {
+    titulo: "Ley 25.673 — Salud Sexual y Procreación Responsable",
+    texto: "Garantiza el acceso gratuito a métodos anticonceptivos en hospitales públicos, centros de salud, obras sociales y prepagas, dentro del Plan Médico Obligatorio."
+  },
+  {
+    titulo: "Ley 26.130 — Anticoncepción Quirúrgica",
+    texto: "Habilita el acceso a la ligadura tubaria y la vasectomía a partir de la mayoría de edad, de forma autónoma y sin necesidad de autorización de terceros; solo se requiere dejar la decisión por escrito tras recibir información completa."
+  },
+  {
+    titulo: "Ley 26.150 — Educación Sexual Integral (ESI)",
+    texto: "Establece que todos los estudiantes, en escuelas públicas y privadas de todo el país, tienen derecho a recibir educación sexual integral con contenidos biológicos, psicológicos, sociales, afectivos y éticos."
+  },
+  {
+    titulo: "Ley 27.610 — Acceso a la Interrupción del Embarazo",
+    texto: "Regula la Interrupción Voluntaria del Embarazo (IVE) hasta las 14 semanas inclusive, y la Interrupción Legal del Embarazo (ILE) sin límite de semanas en casos de violación o riesgo para la vida o la salud de la persona gestante."
+  },
+  {
+    titulo: "Derechos según la edad",
+    texto: "Menores de 13 años: derecho a ser escuchados e informados, con consentimiento asistido. De 13 a 16 años: eligen su método anticonceptivo de forma autónoma. Desde los 16 años: capacidad plena para decidir sobre el propio cuerpo."
+  }
+];
+
+/* Directorio curado de hospitales públicos (muestra representativa, no exhaustiva).
+   Datos de contacto verificados en las webs oficiales de cada hospital / listado del GCBA.
+   Recomendación: confirmar horarios telefónicamente antes de ir. */
+const HOSPITALES_DB = [
+  {
+    nombre: "Hospital de Infecciosas Francisco J. Muñiz",
+    provincia: "CABA",
+    barrio: "Parque Patricios",
+    direccion: "Uspallata 2272",
+    telefono: "011 4360-5700",
+    servicios: ["Infectología de referencia", "Test VIH/ITS", "Consejería salud sexual"]
+  },
+  {
+    nombre: "Hospital General de Agudos Juan A. Fernández",
+    provincia: "CABA",
+    barrio: "Palermo",
+    direccion: "Av. Cerviño 3356",
+    telefono: "011 4808-2600",
+    servicios: ["Consultorios externos", "Salud sexual y reproductiva"]
+  },
+  {
+    nombre: "Hospital General de Agudos Bernardino Rivadavia",
+    provincia: "CABA",
+    barrio: "Recoleta",
+    direccion: "Av. Las Heras 2670",
+    telefono: "011 4809-2000",
+    servicios: ["Consultorios externos", "Guardia 24 hs"]
+  },
+  {
+    nombre: "Hospital General de Agudos Cosme Argerich",
+    provincia: "CABA",
+    barrio: "La Boca",
+    direccion: "Pi y Margall 750",
+    telefono: "011 4121-0833",
+    servicios: ["Test rápido VIH", "Test rápido sífilis", "Servicio de Infectología"]
+  },
+  {
+    nombre: "Hospital General de Agudos Teodoro Álvarez",
+    provincia: "CABA",
+    barrio: "Flores",
+    direccion: "Aranguren 2701",
+    telefono: "011 4630-2900",
+    servicios: ["Test rápido VIH", "Test rápido sífilis", "Servicio de Infectología"]
+  },
+  {
+    nombre: "Hospital General de Agudos Carlos G. Durand",
+    provincia: "CABA",
+    barrio: "Caballito",
+    direccion: "Av. Díaz Vélez 5044",
+    telefono: "011 4982-5555",
+    servicios: ["Test rápido VIH", "Test rápido sífilis", "Infectología y Salud Mental"]
+  },
+  {
+    nombre: "Hospital General de Agudos José M. Ramos Mejía",
+    provincia: "CABA",
+    barrio: "Balvanera",
+    direccion: "Urquiza 609",
+    telefono: "WhatsApp 11 3386-8530",
+    servicios: ["Clínica de Salud Sexual", "Test rápido VIH", "Test rápido sífilis"]
+  },
+  {
+    nombre: "Hospital General de Agudos José A. Penna",
+    provincia: "CABA",
+    barrio: "Barracas",
+    direccion: "Almafuerte 408",
+    telefono: "011 4911-3030",
+    servicios: ["Test rápido VIH", "Test rápido sífilis", "Servicio de Infectología"]
+  },
+  {
+    nombre: "Hospital General de Agudos Enrique Tornú",
+    provincia: "CABA",
+    barrio: "Parque Chas",
+    direccion: "Av. Combatientes de Malvinas 3002",
+    telefono: "011 4521-8700",
+    servicios: ["Test rápido VIH", "Test rápido sífilis"]
+  },
+  {
+    nombre: "Hospital Nacional Prof. Alejandro Posadas",
+    provincia: "Buenos Aires (Provincia)",
+    barrio: "El Palomar, Morón",
+    direccion: "Av. Pte. Illia y Marconi s/n",
+    telefono: "011 4469-9200",
+    servicios: ["Hospital de referencia nacional", "Consultorios de infectología"]
+  },
+  {
+    nombre: "Hospital Provincial del Centenario",
+    provincia: "Santa Fe",
+    barrio: "Rosario",
+    direccion: "Urquiza 3101",
+    telefono: "0341 4724643",
+    servicios: ["Consultorio de VIH (lun. a vie. 8 a 12 hs)", "Consejería salud sexual"]
+  }
+];
+
+
+/* =========================================================
+   FORRIN · chatbot.js (INCRUSTADO)
+   ========================================================= */
+
+function normalizar(texto) {
+  return texto
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "") // saca acentos
+    .replace(/[^\w\s]/g, " ")
+    .trim();
+}
+
+function esSaludo(texto) {
+  return /\b(hola|buenas|buen dia|buenas tardes|buenas noches|hey)\b/.test(texto);
+}
+
+function esAgradecimiento(texto) {
+  return /\b(gracias|genial|perfecto|joya|buenisimo)\b/.test(texto);
+}
+
+function buscarRespuesta(mensajeUsuario) {
+  const texto = normalizar(mensajeUsuario);
+
+  if (esSaludo(texto)) {
+    return {
+      answer: "¡Hola! Soy Forrin 👋. Puedo ayudarte con dudas sobre métodos anticonceptivos, ITS, tus derechos o dónde hacerte un análisis. ¿Qué te gustaría saber?",
+      matchedId: null
+    };
+  }
+  if (esAgradecimiento(texto)) {
+    return {
+      answer: "¡De nada! Si te surge otra duda, acá estoy. Recordá que ante una consulta médica puntual siempre es mejor hablar con un profesional de salud.",
+      matchedId: null
+    };
+  }
+
+  let mejor = null;
+  let mejorScore = 0;
+
+  FAQ_DB.forEach(item => {
+    let score = 0;
+    item.keywords.forEach(kw => {
+      if (texto.includes(normalizar(kw))) score += 1;
+    });
+    if (score > mejorScore) {
+      mejorScore = score;
+      mejor = item;
+    }
+  });
+
+  if (mejor && mejorScore > 0) {
+    return { answer: mejor.answer, matchedId: mejor.id };
+  }
+
+  return null;
+}
+
+const RESPUESTAS_FALLBACK = [
+  "No tengo una respuesta puntual para eso todavía. Te recomiendo llamar a la Línea Salud Sexual 0800-222-3444 (gratis y confidencial) o mirar las preguntas frecuentes de abajo.",
+  "Esa consulta me excede un poco. Un profesional de salud en tu centro de salud u hospital más cercano puede orientarte mejor. ¿Querés que te muestre el listado de hospitales?"
+];
+
+function respuestaFallback() {
+  const i = Math.floor(Math.random() * RESPUESTAS_FALLBACK.length);
+  return RESPUESTAS_FALLBACK[i];
+}
+
+
+/* =========================================================
+   FORRIN · app.js (INCRUSTADO)
+   ========================================================= */
+
+document.addEventListener("DOMContentLoaded", () => {
+  initTabs();
+  renderFAQ();
+  renderMetodos();
+  renderITS();
+  renderDerechos();
+  renderHospitales();
+  initChat();
+  initFiltroHospitales();
+});
+
+function initTabs() {
+  const tabs = Array.from(document.querySelectorAll('[role="tab"]'));
+  const panels = tabs.map(tab => document.getElementById(tab.getAttribute("aria-controls")));
+
+  function activar(index) {
+    tabs.forEach((tab, i) => {
+      const activo = i === index;
+      tab.setAttribute("aria-selected", activo ? "true" : "false");
+      tab.tabIndex = activo ? 0 : -1;
+      panels[i].hidden = !activo;
+    });
+    tabs[index].focus();
+  }
+
+  tabs.forEach((tab, index) => {
+    tab.addEventListener("click", () => {
+      tabs.forEach((t, i) => {
+        t.setAttribute("aria-selected", i === index ? "true" : "false");
+        t.tabIndex = i === index ? 0 : -1;
+        panels[i].hidden = i !== index;
+      });
+    });
+
+    tab.addEventListener("keydown", (e) => {
+      let newIndex = null;
+      if (e.key === "ArrowRight" || e.key === "ArrowDown") newIndex = (index + 1) % tabs.length;
+      if (e.key === "ArrowLeft" || e.key === "ArrowUp") newIndex = (index - 1 + tabs.length) % tabs.length;
+      if (e.key === "Home") newIndex = 0;
+      if (e.key === "End") newIndex = tabs.length - 1;
+      if (newIndex !== null) {
+        e.preventDefault();
+        activar(newIndex);
+      }
+    });
+  });
+}
+
+function renderFAQ() {
+  const list = document.getElementById("faq-list");
+  FAQ_DB.forEach(item => {
+    const li = document.createElement("li");
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.textContent = item.question;
+    btn.addEventListener("click", () => {
+      agregarMensaje("user", item.question);
+      agregarMensaje("bot", item.answer);
+    });
+    li.appendChild(btn);
+    list.appendChild(li);
+  });
+}
+
+function renderMetodos() {
+  const grid = document.getElementById("metodos-grid");
+  METODOS_DB.forEach(m => {
+    const card = document.createElement("article");
+    card.className = "card";
+    card.innerHTML = `
+      <span class="tag">${m.tag}</span>
+      <h3>${m.nombre}</h3>
+      <p>${m.desc}</p>
+    `;
+    grid.appendChild(card);
+  });
+}
+
+function renderITS() {
+  const container = document.getElementById("its-content");
+  const intro = document.createElement("p");
+  intro.textContent = ITS_INFO.intro;
+  container.appendChild(intro);
+
+  ITS_INFO.bloques.forEach(b => {
+    const div = document.createElement("div");
+    div.className = "info-block";
+    div.innerHTML = `<h3>${b.titulo}</h3><p>${b.texto}</p>`;
+    container.appendChild(div);
+  });
+}
+
+function renderDerechos() {
+  const container = document.getElementById("derechos-content");
+  DERECHOS_INFO.forEach(d => {
+    const div = document.createElement("div");
+    div.className = "info-block";
+    div.innerHTML = `<h3>${d.titulo}</h3><p>${d.texto}</p>`;
+    container.appendChild(div);
+  });
+}
+
+function renderHospitales(filtroProvincia = "todas") {
+  const list = document.getElementById("hospitales-list");
+  list.innerHTML = "";
+
+  const datos = filtroProvincia === "todas"
+    ? HOSPITALES_DB
+    : HOSPITALES_DB.filter(h => h.provincia === filtroProvincia);
+
+  if (datos.length === 0) {
+    list.innerHTML = "<p>No hay resultados para ese filtro.</p>";
+    return;
+  }
+
+  datos.forEach(h => {
+    const li = document.createElement("li");
+    li.className = "hospital-card";
+    const mapsUrl = "https://www.google.com/maps/search/" + encodeURIComponent(`${h.nombre} ${h.direccion} ${h.provincia}`);
+    li.innerHTML = `
+      <h3>${h.nombre}</h3>
+      <p>${h.direccion} — ${h.barrio}, ${h.provincia}</p>
+      <p>📞 ${h.telefono}</p>
+      <div class="services">${h.servicios.map(s => `<span>${s}</span>`).join("")}</div>
+      <p><a href="${mapsUrl}" target="_blank" rel="noopener noreferrer">Ver cómo llegar ↗</a></p>
+    `;
+    list.appendChild(li);
+  });
+}
+
+function initFiltroHospitales() {
+  const select = document.getElementById("province-filter");
+  const provincias = [...new Set(HOSPITALES_DB.map(h => h.provincia))];
+  provincias.forEach(p => {
+    const opt = document.createElement("option");
+    opt.value = p;
+    opt.textContent = p;
+    select.appendChild(opt);
+  });
+  select.addEventListener("change", () => renderHospitales(select.value));
+}
+
+function agregarMensaje(tipo, texto) {
+  const chatWindow = document.getElementById("chat-window");
+  const msg = document.createElement("div");
+  msg.className = `msg ${tipo}`;
+  msg.textContent = texto;
+  chatWindow.appendChild(msg);
+  chatWindow.scrollTop = chatWindow.scrollHeight;
+}
+
+function initChat() {
+  agregarMensaje("bot", "¡Hola! Soy Forrin. Preguntame lo que necesites saber sobre salud sexual, métodos anticonceptivos, ITS o tus derechos.");
+
+  const form = document.getElementById("chat-form");
+  const input = document.getElementById("chat-input");
+
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const texto = input.value.trim();
+    if (!texto) return;
+
+    agregarMensaje("user", texto);
+
+    const resultado = buscarRespuesta(texto);
+    const respuesta = resultado ? resultado.answer : respuestaFallback();
+
+    // pequeño delay para que se sienta conversacional
+    setTimeout(() => agregarMensaje("bot", respuesta), 350);
+
+    input.value = "";
+    input.focus();
+  });
+}
+</script>
+</body>
+</html>
