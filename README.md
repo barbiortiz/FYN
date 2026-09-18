@@ -42,3 +42,17 @@ git push -u origin main
    `https://TU_USUARIO.github.io/TU_REPO/`.
 
 ## Estructura
+forrin-app/
+├── index.html
+├── css/
+│ └── styles.css
+├── js/
+│ ├── knowledge-base.js
+│ ├── chatbot.js
+│ └── app.js
+└── README.md
+## Nota importante
+
+El contenido informativo está resumido y reescrito a partir de fuentes oficiales
+(Ministerio de Salud, ANAC, y Ley 26.150), y el listado de hospitales es una muestra
+curada, no exhaustiva. No reemplaza una consulta médica profesional.
