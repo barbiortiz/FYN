@@ -1,0 +1,346 @@
+/* =========================================================
+   FORRIN · styles.css
+   Mobile-first, paleta obligatoria: #ffff00 #e6007d #000 #fff
+   ========================================================= */
+
+:root {
+  --yellow: #ffff00;
+  --magenta: #e6007d;
+  --black: #000000;
+  --white: #ffffff;
+
+  /* combinaciones que cumplen WCAG AA (texto normal >= 4.5:1) */
+  --text-on-yellow: var(--black);   /* ~19:1  */
+  --text-on-magenta: var(--white);  /* ~4.9:1 */
+  --text-on-white: var(--black);    /* 21:1   */
+  --text-on-black: var(--white);    /* 21:1   */
+
+  --radius-pill: 999px;
+  --radius-card: 16px;
+  --space-1: 0.5rem;
+  --space-2: 1rem;
+  --space-3: 1.5rem;
+  --space-4: 2.5rem;
+
+  --focus-ring: 3px solid var(--magenta);
+
+  --font-base: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  font-family: var(--font-base);
+  background: var(--white);
+  color: var(--black);
+  line-height: 1.5;
+}
+
+img, svg { max-width: 100%; display: block; }
+
+/* ---------- Accesibilidad: utilitarias ---------- */
+.visually-hidden {
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden;
+  clip: rect(0,0,0,0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.skip-link {
+  position: absolute;
+  left: -999px;
+  top: 0;
+  background: var(--black);
+  color: var(--white);
+  padding: var(--space-1) var(--space-2);
+  z-index: 100;
+}
+.skip-link:focus {
+  left: var(--space-1);
+  top: var(--space-1);
+}
+
+:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}
+
+/* ---------- Header ---------- */
+.site-header {
+  background: var(--black);
+  color: var(--white);
+  padding: var(--space-2) var(--space-3);
+  text-align: center;
+}
+.brand { display: flex; align-items: center; justify-content: center; gap: var(--space-1); }
+.brand-mark { color: var(--magenta); font-size: 1.4rem; }
+.brand-name { font-weight: 800; font-size: clamp(1.25rem, 4vw, 1.75rem); letter-spacing: 0.02em; }
+.brand-tagline { margin: var(--space-1) 0 0; color: var(--yellow); font-size: 0.9rem; }
+
+/* ---------- Hero + Forrin ---------- */
+.hero {
+  padding: var(--space-3) var(--space-2) var(--space-4);
+  background: linear-gradient(180deg, var(--white) 0%, #fff9e6 100%);
+}
+
+.hero-stage {
+  max-width: 480px;
+  margin: 0 auto;
+  text-align: center;
+  position: relative;
+}
+
+.forrin-figure { margin: 0 auto var(--space-2); width: min(55vw, 200px); }
+
+.hero-title {
+  font-size: clamp(1.5rem, 5vw, 2.25rem);
+  margin: 0 0 var(--space-1);
+}
+.hero-title .highlight {
+  color: var(--magenta);
+}
+.hero-subtitle {
+  margin: 0 0 var(--space-3);
+  font-size: 1rem;
+}
+
+/* --- Pills: mobile-first = grid apilado --- */
+.pill-nav { width: 100%; }
+.pill-list {
+  list-style: none;
+  margin: 0; padding: 0;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-1);
+}
+.pill-list li:first-child { grid-column: 1 / -1; }
+
+.pill {
+  width: 100%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  font: inherit;
+  font-weight: 700;
+  font-size: 0.9rem;
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius-pill);
+  border: 3px solid var(--black);
+  background: var(--yellow);
+  color: var(--text-on-yellow);
+  cursor: pointer;
+  transition: transform 0.15s ease, background 0.15s ease;
+}
+.pill:hover { transform: translateY(-2px); }
+.pill[aria-selected="true"] {
+  background: var(--magenta);
+  color: var(--text-on-magenta);
+  border-color: var(--black);
+}
+
+/* --- Desktop/tablet: pills en anillo alrededor de Forrin --- */
+@media (min-width: 760px) {
+  .hero-stage {
+    max-width: 620px;
+    padding-top: var(--space-4);
+  }
+  .forrin-figure {
+    width: 220px;
+    position: relative;
+    z-index: 2;
+  }
+  .pill-list {
+    display: block;
+    position: absolute;
+    inset: 0;
+  }
+  .pill-list li {
+    position: absolute;
+    top: 50%; left: 50%;
+    --radius: 230px;
+    transform: translate(-50%, -50%) rotate(var(--angle)) translate(var(--radius)) rotate(calc(-1 * var(--angle)));
+    width: 190px;
+  }
+  .hero-title, .hero-subtitle { position: relative; z-index: 3; }
+}
+
+/* ---------- Panels ---------- */
+.content-panel {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: var(--space-4) var(--space-2);
+}
+.content-panel h2 {
+  color: var(--magenta);
+  font-size: clamp(1.4rem, 4vw, 2rem);
+}
+
+.disclaimer {
+  background: var(--yellow);
+  color: var(--text-on-yellow);
+  border: 3px solid var(--black);
+  border-radius: var(--radius-card);
+  padding: var(--space-2);
+  font-size: 0.9rem;
+}
+
+/* ---------- Chat ---------- */
+.chat-window {
+  border: 3px solid var(--black);
+  border-radius: var(--radius-card);
+  min-height: 220px;
+  max-height: 420px;
+  overflow-y: auto;
+  padding: var(--space-2);
+  margin: var(--space-2) 0;
+  background: var(--white);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.msg {
+  max-width: 85%;
+  padding: 0.6rem 0.9rem;
+  border-radius: 14px;
+  border: 2px solid var(--black);
+}
+.msg.bot {
+  background: var(--white);
+  align-self: flex-start;
+}
+.msg.user {
+  background: var(--magenta);
+  color: var(--text-on-magenta);
+  align-self: flex-end;
+}
+
+.chat-form {
+  display: flex;
+  gap: var(--space-1);
+  flex-wrap: wrap;
+}
+.chat-form input {
+  flex: 1 1 200px;
+  padding: 0.7rem;
+  border: 3px solid var(--black);
+  border-radius: var(--radius-pill);
+  font: inherit;
+}
+.chat-form button {
+  padding: 0.7rem 1.4rem;
+  border-radius: var(--radius-pill);
+  border: 3px solid var(--black);
+  background: var(--black);
+  color: var(--white);
+  font-weight: 700;
+  cursor: pointer;
+}
+.chat-form button:hover { background: var(--magenta); }
+
+.faq-list { list-style: none; padding: 0; display: grid; gap: var(--space-1); }
+.faq-list button {
+  width: 100%;
+  text-align: left;
+  padding: 0.7rem 1rem;
+  border-radius: 10px;
+  border: 2px solid var(--black);
+  background: var(--white);
+  cursor: pointer;
+  font: inherit;
+}
+.faq-list button:hover { background: #fff6cc; }
+
+/* ---------- Cards (métodos) ---------- */
+.card-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-2);
+}
+@media (min-width: 640px) {
+  .card-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (min-width: 960px) {
+  .card-grid { grid-template-columns: repeat(3, 1fr); }
+}
+.card {
+  border: 3px solid var(--black);
+  border-radius: var(--radius-card);
+  padding: var(--space-2);
+  background: var(--white);
+}
+.card h3 { color: var(--magenta); margin-top: 0; }
+.card .tag {
+  display: inline-block;
+  background: var(--yellow);
+  color: var(--text-on-yellow);
+  border-radius: var(--radius-pill);
+  padding: 0.15rem 0.7rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+/* ---------- ITS / Derechos ---------- */
+.info-block {
+  border-left: 6px solid var(--magenta);
+  padding-left: var(--space-2);
+  margin-bottom: var(--space-3);
+}
+.info-block h3 { margin-top: 0; }
+
+/* ---------- Hospitales ---------- */
+.filter-bar {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  max-width: 320px;
+  margin-bottom: var(--space-2);
+}
+.filter-bar select {
+  padding: 0.6rem;
+  border: 3px solid var(--black);
+  border-radius: 10px;
+  font: inherit;
+}
+
+.hospital-list { list-style: none; padding: 0; display: grid; gap: var(--space-2); }
+.hospital-card {
+  border: 3px solid var(--black);
+  border-radius: var(--radius-card);
+  padding: var(--space-2);
+}
+.hospital-card h3 { margin: 0 0 0.3rem; color: var(--magenta); }
+.hospital-card .services {
+  display: flex; flex-wrap: wrap; gap: 0.4rem;
+  margin-top: 0.6rem;
+}
+.hospital-card .services span {
+  background: var(--black);
+  color: var(--white);
+  border-radius: var(--radius-pill);
+  padding: 0.2rem 0.7rem;
+  font-size: 0.75rem;
+}
+.hospital-card a { color: var(--magenta); font-weight: 700; }
+
+/* ---------- Footer ---------- */
+.site-footer {
+  background: var(--black);
+  color: var(--white);
+  padding: var(--space-3) var(--space-2);
+  text-align: center;
+  font-size: 0.85rem;
+}
+.site-footer .sources { color: #ccc; margin-top: var(--space-1); }
