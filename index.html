@@ -3,11 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Forrin · Bienestar y Salud Sexual</title>
+<title>Forrín · Bienestar y Salud Sexual</title>
 <meta name="description" content="Información confiable sobre salud sexual, métodos anticonceptivos, ITS y hospitales públicos en Argentina, con Forrin.">
 <style>
 /* =========================================================
-   FORRIN · styles.css (INCRUSTADO)
+   FORRÍN · styles.css (INCRUSTADO)
    Mobile-first, paleta obligatoria: #ffff00 #e6007d #000 #fff
    ========================================================= */
 
@@ -417,7 +417,7 @@ img, svg { max-width: 100%; display: block; }
 
     <!-- ===== PANEL: Chatbot / Preguntas frecuentes ===== -->
     <section id="panel-chat" class="content-panel" role="tabpanel" aria-labelledby="tab-chat">
-      <h2>Preguntale a Forrin</h2>
+      <h2>Preguntale a Forrín</h2>
       <p class="disclaimer">
         Forrin da información general basada en fuentes oficiales. No reemplaza una consulta médica.
         Ante una urgencia, llamá al <strong>911</strong> o acercate a la guardia más cercana.
@@ -489,7 +489,7 @@ const FAQ_DB = [
   {
     id: "consulta",
     question: "¿Dónde puedo consultar sobre salud sexual?",
-    keywords: ["consulta", "consultar", "donde", "asesoramiento", "informacion", "dudas"],
+    keywords: ["consulta", "consultar", "donde", "asesoramiento", "información", "dudas"],
     answer: "Podés consultar gratis en cualquier centro de salud u hospital público, o llamar a la Línea Salud Sexual 0800-222-3444 (confidencial y gratuita). Cada provincia además tiene su propio programa de salud sexual."
   },
   {
@@ -501,7 +501,7 @@ const FAQ_DB = [
   {
     id: "preservativo",
     question: "¿Por qué se recomienda siempre el preservativo?",
-    keywords: ["preservativo", "condon", "proteccion", "doble proteccion"],
+    keywords: ["preservativo", "condón", "protección", "doble protección"],
     answer: "El preservativo es el único método que, además de prevenir el embarazo, protege de infecciones de transmisión sexual (ITS) y VIH. Por eso se recomienda la 'doble protección': preservativo + otro método, para sumar efectividad anticonceptiva y prevención de ITS."
   },
   {
@@ -519,7 +519,7 @@ const FAQ_DB = [
   {
     id: "ive-ile",
     question: "¿Cuándo se puede acceder a una interrupción del embarazo?",
-    keywords: ["aborto", "interrupcion", "embarazo", "ive", "ile"],
+    keywords: ["aborto", "interrupción", "embarazo", "ive", "ile"],
     answer: "Desde 2021 rige la Ley 27.610: la Interrupción Voluntaria del Embarazo (IVE) se puede solicitar hasta la semana 14 inclusive. Después de esa semana, la Interrupción Legal del Embarazo (ILE) procede si el embarazo es producto de una violación o si está en riesgo la vida o la salud de la persona gestante. Para orientarte sobre dónde consultar, podés llamar al 0800-222-3444."
   },
   {
@@ -531,14 +531,14 @@ const FAQ_DB = [
   {
     id: "sifilis-que-es",
     question: "¿Qué es la sífilis?",
-    keywords: ["sifilis", "its", "infeccion de transmision sexual"],
-    answer: "Es una infección de transmisión sexual causada por una bacteria (Treponema pallidum). Si no se trata a tiempo puede avanzar y afectar piel, corazón y sistema nervioso. En Argentina los casos vienen en aumento marcado en los últimos años, por eso el testeo regular es tan importante."
+    keywords: ["sifilis", "its", "infección de transmisión sexual"],
+    answer: "Es una infección de transmisión sexual causada por una bacteria (Treponema pallidum). Si no se trata a tiempo, puede avanzar y afectar la piel, el corazón y el sistema nervioso. En Argentina los casos vienen en aumento marcado en los últimos años, por eso el testeo regular es tan importante."
   },
   {
     id: "sifilis-sintomas",
     question: "¿Qué síntomas tiene la sífilis?",
     keywords: ["sintomas", "chancro", "llaga", "erupcion", "sifilis sintomas"],
-    answer: "Puede no dar síntomas visibles. En la fase primaria aparece una úlcera indolora (chancro) que cicatriza sola, aunque la infección sigue. En la fase secundaria puede haber erupción en piel (típica en palmas y plantas), fiebre y ganglios inflamados: es la etapa de mayor contagio. También existe una fase latente sin síntomas."
+    answer: "Puede no dar síntomas visibles. En la fase primaria aparece una úlcera indolora (chancro) que cicatriza sola, aunque la infección sigue. En la fase secundaria puede haber erupción en la piel (típica en palmas y plantas), fiebre y ganglios inflamados: es la etapa de mayor contagio. También existe una fase latente sin síntomas."
   },
   {
     id: "sifilis-prevencion",
@@ -555,23 +555,23 @@ const FAQ_DB = [
   {
     id: "esi",
     question: "¿Qué es la Educación Sexual Integral (ESI)?",
-    keywords: ["esi", "educacion sexual", "escuela", "ley 26150"],
+    keywords: ["esi", "educación sexual", "escuela", "Ley 26150"],
     answer: "La Ley 26.150 establece que todos los estudiantes, en escuelas públicas y privadas de todo el país, tienen derecho a recibir Educación Sexual Integral: contenidos biológicos, psicológicos, sociales, afectivos y éticos, con información confiable y actualizada, desde el nivel inicial hasta la formación docente."
   },
   {
     id: "violencia",
     question: "Sufrí una situación de abuso o violencia, ¿qué hago?",
-    keywords: ["abuso", "violacion", "violencia", "obligaron", "forzaron", "no consenti"],
+    keywords: ["abuso", "violación", "violencia", "obligaron", "forzaron", "no consenti"],
     answer: "Lo que te pasó no es tu responsabilidad y no tenés que atravesarlo sola/o. Podés llamar a la Línea 144 (atención a víctimas de violencia de género, las 24 horas) o acercarte a la guardia de cualquier hospital público. Si el hecho fue reciente, un hospital también puede orientarte sobre anticoncepción de emergencia y, si corresponde, sobre la Interrupción Legal del Embarazo (Ley 27.610)."
   }
 ];
 
 const METODOS_DB = [
-  { nombre: "Preservativo", tag: "Único que previene ITS", desc: "Método de barrera. Se usa desde el inicio hasta el final de la relación (vaginal, anal u oral). Revisá vencimiento y usá lubricante a base de agua." },
+  { nombre: "Preservativo", tag: "Único que previene ITS", desc: "Método de barrera. Se usa desde el inicio hasta el final de la relación (vaginal, anal u oral). Revisá el vencimiento y usá lubricante a base de agua." },
   { nombre: "Pastillas combinadas", tag: "Hormonal diario", desc: "Combinan dos hormonas. Se toman una vez por día; requieren regularidad para ser efectivas." },
-  { nombre: "Pastillas de una sola hormona", tag: "Hormonal diario", desc: "Conocida como minipíldora. Alternativa para personas que no pueden tomar estrógeno, por ejemplo durante la lactancia." },
+  { nombre: "Pastillas de una sola hormona", tag: "Hormonal diario", desc: "Conocida como minipíldora. Alternativa para personas que no pueden tomar estrógeno, por ejemplo, durante la lactancia." },
   { nombre: "Inyectables", tag: "Mensual o trimestral", desc: "Aplicación hormonal cada 1 o cada 3 meses, según el tipo, en un centro de salud." },
-  { nombre: "DIU", tag: "Larga duración", desc: "Dispositivo intrauterino colocado por un profesional de salud. Protege por varios años y es reversible." },
+  { nombre: "DIU", tag: "Larga duración", desc: "Dispositivo intrauterino colocado por un profesional de la salud. Protege por varios años y es reversible." },
   { nombre: "Implante subdérmico", tag: "Larga duración", desc: "Varilla pequeña que se coloca bajo la piel del brazo. Libera hormonas de forma gradual durante varios años." },
   { nombre: "Anticoncepción hormonal de emergencia (AHE)", tag: "Uso ocasional", desc: "Se usa después de una relación sin protección o ante una falla del método habitual. Cuanto antes se tome, más efectiva es. No reemplaza un método regular." },
   { nombre: "Ligadura tubaria", tag: "Método permanente", desc: "Cirugía que impide el paso de óvulos al útero. Es de difícil reversión; se accede siendo mayor de edad (Ley 26.130)." },
@@ -754,7 +754,7 @@ function buscarRespuesta(mensajeUsuario) {
   }
   if (esAgradecimiento(texto)) {
     return {
-      answer: "¡De nada! Si te surge otra duda, acá estoy. Recordá que ante una consulta médica puntual siempre es mejor hablar con un profesional de salud.",
+      answer: "¡De nada! Si te surge otra duda, acá estoy. Recordá que ante una consulta médica puntual siempre es mejor hablar con un profesional de la salud.",
       matchedId: null
     };
   }
@@ -782,7 +782,7 @@ function buscarRespuesta(mensajeUsuario) {
 
 const RESPUESTAS_FALLBACK = [
   "No tengo una respuesta puntual para eso todavía. Te recomiendo llamar a la Línea Salud Sexual 0800-222-3444 (gratis y confidencial) o mirar las preguntas frecuentes de abajo.",
-  "Esa consulta me excede un poco. Un profesional de salud en tu centro de salud u hospital más cercano puede orientarte mejor. ¿Querés que te muestre el listado de hospitales?"
+  "Esa consulta me excede un poco. Un profesional de la salud en tu centro de salud u hospital más cercano puede orientarte mejor. ¿Querés que te muestre el listado de hospitales?"
 ];
 
 function respuestaFallback() {
@@ -947,7 +947,7 @@ function agregarMensaje(tipo, texto) {
 }
 
 function initChat() {
-  agregarMensaje("bot", "¡Hola! Soy Forrin. Preguntame lo que necesites saber sobre salud sexual, métodos anticonceptivos, ITS o tus derechos.");
+  agregarMensaje("bot", "¡Hola! Soy Forrín. Preguntame lo que necesites saber sobre salud sexual, métodos anticonceptivos, ITS o tus derechos.");
 
   const form = document.getElementById("chat-form");
   const input = document.getElementById("chat-input");
