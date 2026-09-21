@@ -2,13 +2,22 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Forrín · Bienestar y Salud Sexual</title>
-<meta name="description" content="Información confiable sobre salud sexual, métodos anticonceptivos, ITS y hospitales públicos en Argentina, con Forrin.">
+<meta name="description" content="Información confiable sobre salud sexual, métodos anticonceptivos, ITS y hospitales públicos en Argentina, con Forrín.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
+
+<!-- Mapa interactivo: Leaflet + tiles de CARTO (sin API key) -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+
 <style>
 /* =========================================================
-   FORRÍN · styles.css (INCRUSTADO)
-   Mobile-first, paleta obligatoria: #ffff00 #e6007d #000 #fff
+   FORRÍN · styles.css
+   Mobile-first · Paleta: #ffff00 #e6007d #000 #fff
+   Display: Bebas Neue · Texto corrido: system sans
    ========================================================= */
 
 :root {
@@ -17,38 +26,72 @@
   --black: #000000;
   --white: #ffffff;
 
-  /* combinaciones que cumplen WCAG AA (texto normal >= 4.5:1) */
-  --text-on-yellow: var(--black);   /* ~19:1  */
-  --text-on-magenta: var(--white);  /* ~4.9:1 */
-  --text-on-white: var(--black);    /* 21:1   */
-  --text-on-black: var(--white);    /* 21:1   */
+  /* Contrastes usados (todos WCAG AA sobre negro)
+     amarillo/negro 19:1 · blanco/negro 21:1 · magenta/negro 4.6:1 */
+  --text-on-yellow: var(--black);
+  --text-on-magenta: var(--white);
+  --text-on-black: var(--white);
 
+  --line: 3px;
   --radius-pill: 999px;
-  --radius-card: 16px;
+  --radius-card: 18px;
+
   --space-1: 0.5rem;
   --space-2: 1rem;
   --space-3: 1.5rem;
   --space-4: 2.5rem;
+  --space-5: 4rem;
 
-  --focus-ring: 3px solid var(--magenta);
+  --focus-ring: 3px solid var(--yellow);
 
-  --font-base: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-display: "Bebas Neue", "Haettenschweiler", "Arial Narrow", Impact, sans-serif;
+  --font-text: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+
+  --measure: 68ch;
+
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  background: var(--black);
 }
 
-* { box-sizing: border-box; }
-html { scroll-behavior: smooth; }
+*, *::before, *::after { box-sizing: border-box; }
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: calc(env(safe-area-inset-top, 0px) + 1rem);
+  background: var(--black);
+}
 
 body {
   margin: 0;
-  font-family: var(--font-base);
-  background: var(--white);
-  color: var(--black);
-  line-height: 1.5;
+  font-family: var(--font-text);
+  font-size: 1rem;
+  line-height: 1.6;
+  background: var(--black);
+  color: var(--text-on-black);
+  -webkit-font-smoothing: antialiased;
 }
 
 img, svg { max-width: 100%; display: block; }
 
-/* ---------- Accesibilidad: utilitarias ---------- */
+/* ---------- Escala tipográfica ---------- */
+.display, h1, h2, h3, .tag, .btn, button, legend, .field-label {
+  font-family: var(--font-display);
+  font-weight: 400;
+  letter-spacing: 0.03em;
+  line-height: 1.02;
+}
+
+h1 { font-size: clamp(2.75rem, 11vw, 4.5rem); margin: 0 0 var(--space-1); }
+h2 { font-size: clamp(2rem, 7vw, 3rem); margin: 0 0 var(--space-2); color: var(--yellow); }
+h3 { font-size: clamp(1.4rem, 4.5vw, 1.8rem); margin: 0 0 var(--space-1); color: var(--magenta); }
+
+p { margin: 0 0 var(--space-2); max-width: var(--measure); }
+a { color: var(--yellow); }
+a:hover { color: var(--magenta); }
+
+/* ---------- Accesibilidad ---------- */
 .visually-hidden {
   position: absolute;
   width: 1px; height: 1px;
@@ -63,107 +106,157 @@ img, svg { max-width: 100%; display: block; }
   position: absolute;
   left: -999px;
   top: 0;
-  background: var(--black);
-  color: var(--white);
+  background: var(--yellow);
+  color: var(--text-on-yellow);
+  font-family: var(--font-display);
+  font-size: 1.1rem;
   padding: var(--space-1) var(--space-2);
   z-index: 100;
 }
-.skip-link:focus {
-  left: var(--space-1);
-  top: var(--space-1);
-}
+.skip-link:focus { left: var(--space-1); top: var(--space-1); }
 
 :focus-visible {
   outline: var(--focus-ring);
-  outline-offset: 2px;
+  outline-offset: 3px;
 }
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
-  * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
 }
 
 /* ---------- Header ---------- */
 .site-header {
-  background: var(--black);
+  border-bottom: var(--line) solid var(--yellow);
+  padding: var(--space-2) var(--space-2) var(--space-2);
+  text-align: center;
+}
+.brand {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 0.5rem;
+}
+.brand-mark {
+  font-family: var(--font-display);
+  color: var(--magenta);
+  font-size: 1.9rem;
+  line-height: 1;
+}
+.brand-name {
+  font-family: var(--font-display);
+  font-size: clamp(1.7rem, 6vw, 2.2rem);
+  letter-spacing: 0.06em;
   color: var(--white);
-  padding: var(--space-2) var(--space-3);
-  text-align: center;
 }
-.brand { display: flex; align-items: center; justify-content: center; gap: var(--space-1); }
-.brand-mark { color: var(--magenta); font-size: 1.4rem; }
-.brand-name { font-weight: 800; font-size: clamp(1.25rem, 4vw, 1.75rem); letter-spacing: 0.02em; }
-.brand-tagline { margin: var(--space-1) 0 0; color: var(--yellow); font-size: 0.9rem; }
+.brand-tagline {
+  margin: 0.35rem auto 0;
+  max-width: 40ch;
+  color: var(--yellow);
+  font-size: 0.85rem;
+  line-height: 1.4;
+}
 
-/* ---------- Hero + Forrin ---------- */
+/* ---------- Hero ---------- */
 .hero {
-  padding: var(--space-3) var(--space-2) var(--space-4);
-  background: linear-gradient(180deg, var(--white) 0%, #fff9e6 100%);
-}
-
-.hero-stage {
-  max-width: 480px;
-  margin: 0 auto;
+  padding: var(--space-4) var(--space-2) var(--space-5);
   text-align: center;
+  background:
+    radial-gradient(60% 45% at 50% 38%, rgba(230, 0, 125, 0.22) 0%, rgba(0, 0, 0, 0) 70%),
+    var(--black);
+}
+
+.hero-head { max-width: 40ch; margin: 0 auto var(--space-3); }
+.hero-title .highlight { color: var(--magenta); }
+.hero-subtitle {
+  margin: 0 auto;
+  font-size: 1rem;
+  color: var(--white);
+  max-width: 34ch;
+}
+
+/* Anillo: contenedor cuadrado con la mascota al centro */
+.ring {
   position: relative;
+  width: 100%;
+  max-width: 420px;
+  margin: 0 auto;
 }
 
-.forrin-figure { margin: 0 auto var(--space-2); width: min(55vw, 200px); }
-
-.hero-title {
-  font-size: clamp(1.5rem, 5vw, 2.25rem);
-  margin: 0 0 var(--space-1);
+.forrin-figure {
+  margin: 0 auto var(--space-3);
+  width: min(52vw, 190px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  border: 4px solid var(--magenta);
+  background: var(--yellow);
+  display: grid;
+  place-items: center;
+  overflow: hidden;
 }
-.hero-title .highlight {
+.forrin-figure img { width: 88%; height: auto; }
+.forrin-figure .forrin-fallback { display: none; }
+.forrin-figure.no-img img { display: none; }
+.forrin-figure.no-img .forrin-fallback {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 4rem;
   color: var(--magenta);
 }
-.hero-subtitle {
-  margin: 0 0 var(--space-3);
-  font-size: 1rem;
-}
 
-/* --- Pills: mobile-first = grid apilado --- */
+/* Pills: mobile = grilla de 2 columnas, todas del mismo alto */
 .pill-nav { width: 100%; }
 .pill-list {
   list-style: none;
-  margin: 0; padding: 0;
+  margin: 0;
+  padding: 0;
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: var(--space-1);
 }
-.pill-list li:first-child { grid-column: 1 / -1; }
+.pill-list li { display: flex; }
 
 .pill {
   width: 100%;
+  min-height: 3.4rem;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.4rem;
-  font: inherit;
+  text-align: center;
+  font-family: var(--font-text);
   font-weight: 700;
   font-size: 0.9rem;
-  padding: 0.75rem 1rem;
+  letter-spacing: 0;
+  line-height: 1.25;
+  padding: 0.55rem 0.9rem;
   border-radius: var(--radius-pill);
-  border: 3px solid var(--black);
+  border: var(--line) solid var(--black);
   background: var(--yellow);
   color: var(--text-on-yellow);
   cursor: pointer;
-  transition: transform 0.15s ease, background 0.15s ease;
+  transition: transform 0.15s ease, background 0.15s ease, color 0.15s ease;
 }
 .pill:hover { transform: translateY(-2px); }
 .pill[aria-selected="true"] {
   background: var(--magenta);
   color: var(--text-on-magenta);
-  border-color: var(--black);
+  border-color: var(--white);
 }
 
-/* --- Desktop/tablet: pills en anillo alrededor de Forrin --- */
-@media (min-width: 760px) {
-  .hero-stage {
-    max-width: 620px;
-    padding-top: var(--space-4);
+/* Desktop: pills en anillo alrededor de Forrín */
+@media (min-width: 900px) {
+  .hero { padding-bottom: var(--space-4); }
+  .ring {
+    max-width: 680px;
+    aspect-ratio: 1;
+    display: grid;
+    place-items: center;
   }
   .forrin-figure {
+    margin: 0;
     width: 220px;
     position: relative;
     z-index: 2;
@@ -172,47 +265,70 @@ img, svg { max-width: 100%; display: block; }
     display: block;
     position: absolute;
     inset: 0;
+    z-index: 3;
   }
   .pill-list li {
     position: absolute;
-    top: 50%; left: 50%;
-    --radius: 230px;
-    transform: translate(-50%, -50%) rotate(var(--angle)) translate(var(--radius)) rotate(calc(-1 * var(--angle)));
-    width: 190px;
+    top: 50%;
+    left: 50%;
+    width: 200px;
+    transform:
+      translate(-50%, -50%)
+      rotate(var(--angle))
+      translate(255px)
+      rotate(calc(-1 * var(--angle)));
   }
-  .hero-title, .hero-subtitle { position: relative; z-index: 3; }
+  .pill { min-height: 3.6rem; font-size: 0.95rem; }
 }
 
-/* ---------- Panels ---------- */
+/* ---------- Paneles ---------- */
 .content-panel {
-  max-width: 860px;
+  max-width: 900px;
   margin: 0 auto;
-  padding: var(--space-4) var(--space-2);
+  padding: var(--space-4) var(--space-2) var(--space-5);
+  border-top: var(--line) solid var(--yellow);
 }
-.content-panel h2 {
-  color: var(--magenta);
-  font-size: clamp(1.4rem, 4vw, 2rem);
-}
+.panel-intro { color: var(--white); }
 
 .disclaimer {
   background: var(--yellow);
   color: var(--text-on-yellow);
-  border: 3px solid var(--black);
   border-radius: var(--radius-card);
   padding: var(--space-2);
-  font-size: 0.9rem;
+  font-size: 0.95rem;
+  max-width: var(--measure);
 }
+.disclaimer p { margin: 0; }
 
 /* ---------- Chat ---------- */
+.chat-intro {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-bottom: var(--space-2);
+}
+.chat-figure {
+  flex: 0 0 auto;
+  width: clamp(88px, 24vw, 132px);
+  margin: 0;
+}
+.chat-figure img { width: 100%; height: auto; }
+.chat-intro .disclaimer { flex: 1 1 auto; }
+
+@media (min-width: 720px) {
+  .chat-figure { width: 160px; }
+  .chat-intro { gap: var(--space-3); align-items: flex-end; }
+}
+
 .chat-window {
-  border: 3px solid var(--black);
+  border: var(--line) solid var(--yellow);
   border-radius: var(--radius-card);
-  min-height: 220px;
+  min-height: 240px;
   max-height: 420px;
   overflow-y: auto;
   padding: var(--space-2);
   margin: var(--space-2) 0;
-  background: var(--white);
+  background: var(--black);
   display: flex;
   flex-direction: column;
   gap: var(--space-1);
@@ -220,138 +336,364 @@ img, svg { max-width: 100%; display: block; }
 
 .msg {
   max-width: 85%;
-  padding: 0.6rem 0.9rem;
+  padding: 0.65rem 0.95rem;
   border-radius: 14px;
-  border: 2px solid var(--black);
+  border: 2px solid var(--white);
+  font-size: 0.95rem;
 }
-.msg.bot {
-  background: var(--white);
-  align-self: flex-start;
-}
+.msg p { margin: 0; max-width: none; }
+.msg.bot { background: var(--black); color: var(--white); align-self: flex-start; }
 .msg.user {
   background: var(--magenta);
   color: var(--text-on-magenta);
+  border-color: var(--magenta);
   align-self: flex-end;
 }
 
-.chat-form {
-  display: flex;
-  gap: var(--space-1);
-  flex-wrap: wrap;
-}
+.chat-form { display: flex; gap: var(--space-1); flex-wrap: wrap; }
 .chat-form input {
-  flex: 1 1 200px;
-  padding: 0.7rem;
-  border: 3px solid var(--black);
+  flex: 1 1 220px;
+  min-width: 0;
+  padding: 0.75rem 1rem;
+  border: var(--line) solid var(--white);
   border-radius: var(--radius-pill);
-  font: inherit;
-}
-.chat-form button {
-  padding: 0.7rem 1.4rem;
-  border-radius: var(--radius-pill);
-  border: 3px solid var(--black);
   background: var(--black);
   color: var(--white);
-  font-weight: 700;
-  cursor: pointer;
+  font: inherit;
 }
-.chat-form button:hover { background: var(--magenta); }
+.chat-form input::placeholder { color: rgba(255,255,255,0.6); }
 
-.faq-list { list-style: none; padding: 0; display: grid; gap: var(--space-1); }
+.btn {
+  padding: 0.7rem 1.6rem;
+  border-radius: var(--radius-pill);
+  border: var(--line) solid var(--yellow);
+  background: var(--yellow);
+  color: var(--text-on-yellow);
+  font-size: 1.15rem;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+.btn:hover { background: var(--magenta); color: var(--text-on-magenta); border-color: var(--magenta); }
+
+.quick-questions { margin-top: var(--space-4); }
+.faq-groups { display: grid; gap: var(--space-1); max-width: var(--measure); }
+
+.faq-group {
+  border: 2px solid var(--white);
+  border-radius: 14px;
+  overflow: hidden;
+}
+.faq-group[open] { border-color: var(--yellow); }
+
+.faq-group > summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  padding: 0.85rem 1rem;
+  cursor: pointer;
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  letter-spacing: 0.04em;
+  color: var(--white);
+  list-style: none;
+}
+.faq-group > summary::-webkit-details-marker { display: none; }
+.faq-group[open] > summary { color: var(--yellow); }
+.faq-group > summary .count {
+  font-family: var(--font-text);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0;
+  color: var(--black);
+  background: var(--yellow);
+  border-radius: var(--radius-pill);
+  padding: 0.1rem 0.55rem;
+}
+.faq-group[open] > summary .count { background: var(--magenta); color: var(--white); }
+
+.faq-list { list-style: none; padding: 0 0.7rem 0.7rem; margin: 0; display: grid; gap: 0.4rem; }
 .faq-list button {
   width: 100%;
   text-align: left;
-  padding: 0.7rem 1rem;
+  padding: 0.7rem 0.9rem;
   border-radius: 10px;
-  border: 2px solid var(--black);
-  background: var(--white);
+  border: 2px solid rgba(255, 255, 255, 0.45);
+  background: var(--black);
+  color: var(--white);
   cursor: pointer;
-  font: inherit;
+  font-family: var(--font-text);
+  font-size: 0.92rem;
+  line-height: 1.4;
 }
-.faq-list button:hover { background: #fff6cc; }
+.faq-list button:hover { background: var(--yellow); color: var(--text-on-yellow); border-color: var(--yellow); }
 
 /* ---------- Cards (métodos) ---------- */
 .card-grid {
   display: grid;
   grid-template-columns: 1fr;
   gap: var(--space-2);
+  align-items: stretch;
 }
-@media (min-width: 640px) {
-  .card-grid { grid-template-columns: repeat(2, 1fr); }
-}
-@media (min-width: 960px) {
-  .card-grid { grid-template-columns: repeat(3, 1fr); }
-}
+@media (min-width: 640px) { .card-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (min-width: 960px) { .card-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+
 .card {
-  border: 3px solid var(--black);
+  border: var(--line) solid var(--white);
   border-radius: var(--radius-card);
   padding: var(--space-2);
-  background: var(--white);
+  background: var(--black);
+  display: flex;
+  flex-direction: column;
 }
-.card h3 { color: var(--magenta); margin-top: 0; }
-.card .tag {
-  display: inline-block;
+.card p { margin-bottom: 0; font-size: 0.95rem; }
+.tag {
+  align-self: flex-start;
   background: var(--yellow);
   color: var(--text-on-yellow);
   border-radius: var(--radius-pill);
-  padding: 0.15rem 0.7rem;
-  font-size: 0.75rem;
-  font-weight: 700;
-  margin-bottom: 0.5rem;
+  padding: 0.25rem 0.8rem;
+  font-size: 0.9rem;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.6rem;
 }
 
-/* ---------- ITS / Derechos ---------- */
+/* ---------- Bloques de info ---------- */
 .info-block {
   border-left: 6px solid var(--magenta);
   padding-left: var(--space-2);
   margin-bottom: var(--space-3);
 }
-.info-block h3 { margin-top: 0; }
+.info-block p { margin-bottom: 0; }
 
 /* ---------- Hospitales ---------- */
 .filter-bar {
-  display: flex;
-  flex-direction: column;
-  gap: 0.3rem;
-  max-width: 320px;
-  margin-bottom: var(--space-2);
+  display: grid;
+  gap: 0.35rem;
+  max-width: 340px;
+  margin-bottom: var(--space-3);
 }
-.filter-bar select {
-  padding: 0.6rem;
-  border: 3px solid var(--black);
-  border-radius: 10px;
-  font: inherit;
+select, input[type="text"], input[type="email"], input[type="tel"], textarea {
+  width: 100%;
+  padding: 0.7rem 0.9rem;
+  border: var(--line) solid var(--white);
+  border-radius: 12px;
+  background: var(--black);
+  color: var(--white);
+  font-family: var(--font-text);
+  font-size: 1rem;
+}
+textarea { min-height: 6rem; resize: vertical; }
+select { appearance: none; background-image: none; }
+
+.field-label {
+  font-size: 1.15rem;
+  color: var(--yellow);
+  letter-spacing: 0.05em;
 }
 
-.hospital-list { list-style: none; padding: 0; display: grid; gap: var(--space-2); }
+/* Mapa */
+.map-frame {
+  border: var(--line) solid var(--yellow);
+  border-radius: var(--radius-card);
+  overflow: hidden;
+  margin-bottom: var(--space-3);
+}
+#mapa {
+  width: 100%;
+  height: 320px;
+  background: var(--black);
+}
+@media (min-width: 720px) { #mapa { height: 430px; } }
+
+.map-fallback {
+  padding: var(--space-2);
+  font-size: 0.9rem;
+  color: var(--yellow);
+}
+
+.leaflet-container { background: #000; font-family: var(--font-text); }
+.leaflet-popup-content-wrapper,
+.leaflet-popup-tip { background: var(--yellow); color: var(--text-on-yellow); border-radius: 12px; }
+.leaflet-popup-content { margin: 0.8rem 1rem; font-size: 0.9rem; line-height: 1.4; }
+.leaflet-popup-content strong {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  letter-spacing: 0.03em;
+  margin-bottom: 0.2rem;
+}
+.leaflet-popup-content a { color: var(--magenta); font-weight: 700; }
+.leaflet-popup-close-button { color: var(--black) !important; }
+.leaflet-control-attribution {
+  background: rgba(0, 0, 0, 0.75) !important;
+  color: rgba(255, 255, 255, 0.8) !important;
+  font-size: 0.65rem;
+}
+.leaflet-control-attribution a { color: var(--yellow) !important; }
+.leaflet-bar a {
+  background: var(--black);
+  color: var(--yellow);
+  border-bottom-color: rgba(255, 255, 255, 0.3);
+}
+.leaflet-bar a:hover { background: var(--magenta); color: var(--white); }
+
+.marker-pin {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--magenta);
+  border: 3px solid var(--yellow);
+  box-shadow: 0 0 0 2px var(--black);
+}
+
+.hospital-list { list-style: none; padding: 0; margin: 0; display: grid; gap: var(--space-2); }
+@media (min-width: 720px) { .hospital-list { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 .hospital-card {
-  border: 3px solid var(--black);
+  border: var(--line) solid var(--white);
   border-radius: var(--radius-card);
   padding: var(--space-2);
 }
-.hospital-card h3 { margin: 0 0 0.3rem; color: var(--magenta); }
-.hospital-card .services {
-  display: flex; flex-wrap: wrap; gap: 0.4rem;
-  margin-top: 0.6rem;
-}
+.hospital-card p { margin: 0 0 0.35rem; font-size: 0.95rem; }
+.hospital-card .meta { color: var(--white); }
+.hospital-card .services { display: flex; flex-wrap: wrap; gap: 0.4rem; margin: 0.7rem 0; }
 .hospital-card .services span {
-  background: var(--black);
-  color: var(--white);
+  background: var(--yellow);
+  color: var(--text-on-yellow);
   border-radius: var(--radius-pill);
   padding: 0.2rem 0.7rem;
-  font-size: 0.75rem;
+  font-size: 0.78rem;
+  line-height: 1.5;
 }
-.hospital-card a { color: var(--magenta); font-weight: 700; }
+.hospital-card a { font-weight: 700; }
+.hospital-card .card-actions { display: flex; flex-wrap: wrap; gap: var(--space-1); align-items: center; }
+.hospital-card .map-link {
+  font-family: var(--font-text);
+  font-size: 0.85rem;
+  font-weight: 700;
+  padding: 0.35rem 0.9rem;
+  border-radius: var(--radius-pill);
+  border: 2px solid var(--yellow);
+  background: var(--black);
+  color: var(--yellow);
+  cursor: pointer;
+}
+.hospital-card .map-link:hover { background: var(--yellow); color: var(--text-on-yellow); }
+
+/* ---------- Voluntariado ---------- */
+.volunteer-layout {
+  display: grid;
+  gap: var(--space-3);
+}
+@media (min-width: 900px) {
+  .volunteer-layout { grid-template-columns: minmax(0, 1fr) 320px; align-items: start; }
+}
+
+.volunteer-form { display: grid; gap: var(--space-3); }
+
+fieldset {
+  border: var(--line) solid var(--white);
+  border-radius: var(--radius-card);
+  padding: var(--space-2);
+  margin: 0;
+  min-width: 0;
+}
+legend {
+  font-size: 1.4rem;
+  color: var(--yellow);
+  padding: 0 0.5rem;
+}
+
+.field-grid {
+  display: grid;
+  gap: var(--space-2);
+  grid-template-columns: 1fr;
+}
+@media (min-width: 640px) { .field-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.field { display: grid; gap: 0.3rem; align-content: start; }
+.field.full { grid-column: 1 / -1; }
+.hint { font-size: 0.8rem; color: var(--yellow); margin: 0; }
+
+.check-grid {
+  display: grid;
+  gap: 0.6rem;
+  grid-template-columns: 1fr;
+}
+@media (min-width: 640px) { .check-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
+.check {
+  display: grid;
+  grid-template-columns: 1.4rem 1fr;
+  gap: 0.7rem;
+  align-items: start;
+  padding: 0.7rem 0.8rem;
+  border: 2px solid var(--white);
+  border-radius: 12px;
+  font-size: 0.92rem;
+  line-height: 1.35;
+  cursor: pointer;
+}
+.check:hover { border-color: var(--yellow); }
+.check input { width: 1.25rem; height: 1.25rem; margin: 0.1rem 0 0; accent-color: var(--magenta); }
+.check .date {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  letter-spacing: 0.05em;
+  color: var(--yellow);
+}
+.check:has(input:checked) { border-color: var(--magenta); background: rgba(230, 0, 125, 0.18); }
+
+.consent { margin-top: var(--space-2); }
+
+.error {
+  color: var(--yellow);
+  font-size: 0.85rem;
+  margin: 0;
+  min-height: 0;
+}
+[aria-invalid="true"] { border-color: var(--magenta); }
+
+.form-status {
+  border: var(--line) solid var(--magenta);
+  border-radius: var(--radius-card);
+  padding: var(--space-2);
+  background: rgba(230, 0, 125, 0.15);
+}
+.form-status:empty { display: none; }
+
+.volunteer-aside {
+  border: var(--line) solid var(--yellow);
+  border-radius: var(--radius-card);
+  padding: var(--space-2);
+}
+.volunteer-aside h3 { color: var(--yellow); }
+.volunteer-aside ul { padding-left: 1.1rem; margin: 0; font-size: 0.92rem; }
+.volunteer-aside li { margin-bottom: 0.5rem; }
+
+.success-card {
+  border: var(--line) solid var(--yellow);
+  border-radius: var(--radius-card);
+  padding: var(--space-3);
+  background: var(--yellow);
+  color: var(--text-on-yellow);
+}
+.success-card h3 { color: var(--black); }
+.success-card a { color: var(--magenta); }
+.success-card .btn { border-color: var(--black); background: var(--black); color: var(--white); }
+.success-card .btn:hover { background: var(--magenta); border-color: var(--magenta); }
+.success-list { padding-left: 1.1rem; margin: 0 0 var(--space-2); font-size: 0.95rem; }
 
 /* ---------- Footer ---------- */
 .site-footer {
-  background: var(--black);
-  color: var(--white);
-  padding: var(--space-3) var(--space-2);
+  border-top: var(--line) solid var(--yellow);
+  padding: var(--space-3) var(--space-2) var(--space-4);
   text-align: center;
-  font-size: 0.85rem;
+  font-size: 0.88rem;
 }
-.site-footer .sources { color: #ccc; margin-top: var(--space-1); }
+.site-footer p { margin: 0 auto var(--space-1); max-width: 62ch; }
+.site-footer .lines strong { color: var(--yellow); }
+.site-footer .sources { color: rgba(255,255,255,0.75); font-size: 0.78rem; }
 </style>
 </head>
 <body>
@@ -361,128 +703,254 @@ img, svg { max-width: 100%; display: block; }
   <header class="site-header">
     <div class="brand">
       <span class="brand-mark" aria-hidden="true">✚</span>
-      <span class="brand-name">Forrin</span>
+      <span class="brand-name">Forrín</span>
     </div>
-    <p class="brand-tagline">Bienestar y salud sexual, sin vueltas</p>
+    <p class="brand-tagline">Gratuito, confidencial y con fuentes oficiales</p>
   </header>
 
   <main id="main-content">
 
-    <!-- ===== HERO: Forrin + navegación en pills ===== -->
+    <!-- ===== HERO ===== -->
     <section class="hero" aria-label="Presentación">
-      <div class="hero-stage">
+      <div class="hero-head">
+        <h1 class="hero-title">Hola, soy <span class="highlight">Forrín</span></h1>
+        <p class="hero-subtitle">Elegí por dónde querés empezar.</p>
+      </div>
 
-        <!-- Forrin: mascota nueva -->
-        <figure class="forrin-figure" aria-hidden="true">
-          <img src="forrin.jpg" alt="Forrin" style="width: 100%; height: auto;">
+      <div class="ring">
+        <figure class="forrin-figure">
+          <img src="forrin.jpg" alt="Forrín, la mascota de la app" onerror="this.closest('.forrin-figure').classList.add('no-img')">
+          <span class="forrin-fallback" aria-hidden="true">✚</span>
         </figure>
 
-        <h1 class="hero-title">
-          Hola, soy <span class="highlight">Forrin</span>
-        </h1>
-        <p class="hero-subtitle">Tu guía de bienestar y salud sexual. Elegí un tema:</p>
-
-        <!-- Navegación tipo "pills" alrededor de Forrin -->
-        <nav class="pill-nav" aria-label="Secciones principales" role="tablist">
-          <ul class="pill-list">
+        <nav class="pill-nav" aria-label="Secciones principales">
+          <ul class="pill-list" role="tablist">
             <li style="--angle:-90deg">
-              <button class="pill" role="tab" id="tab-chat" aria-controls="panel-chat" aria-selected="true" data-target="panel-chat">
-                <span aria-hidden="true">💬</span> Preguntale a Forrin
-              </button>
+              <button class="pill" role="tab" id="tab-chat" aria-controls="panel-chat" aria-selected="true" data-target="panel-chat">Preguntale a Forrín</button>
             </li>
-            <li style="--angle:-18deg">
-              <button class="pill" role="tab" id="tab-metodos" aria-controls="panel-metodos" aria-selected="false" tabindex="-1" data-target="panel-metodos">
-                <span aria-hidden="true">💊</span> Métodos anticonceptivos
-              </button>
+            <li style="--angle:-30deg">
+              <button class="pill" role="tab" id="tab-metodos" aria-controls="panel-metodos" aria-selected="false" tabindex="-1" data-target="panel-metodos">Métodos anticonceptivos</button>
             </li>
-            <li style="--angle:54deg">
-              <button class="pill" role="tab" id="tab-its" aria-controls="panel-its" aria-selected="false" tabindex="-1" data-target="panel-its">
-                <span aria-hidden="true">🛡️</span> ITS y prevención
-              </button>
+            <li style="--angle:30deg">
+              <button class="pill" role="tab" id="tab-its" aria-controls="panel-its" aria-selected="false" tabindex="-1" data-target="panel-its">ITS y prevención</button>
             </li>
-            <li style="--angle:126deg">
-              <button class="pill" role="tab" id="tab-derechos" aria-controls="panel-derechos" aria-selected="false" tabindex="-1" data-target="panel-derechos">
-                <span aria-hidden="true">⚖️</span> Tus derechos
-              </button>
+            <li style="--angle:90deg">
+              <button class="pill" role="tab" id="tab-voluntariado" aria-controls="panel-voluntariado" aria-selected="false" tabindex="-1" data-target="panel-voluntariado">Voluntariado médico</button>
             </li>
-            <li style="--angle:198deg">
-              <button class="pill" role="tab" id="tab-hospitales" aria-controls="panel-hospitales" aria-selected="false" tabindex="-1" data-target="panel-hospitales">
-                <span aria-hidden="true">📍</span> Hospitales públicos
-              </button>
+            <li style="--angle:150deg">
+              <button class="pill" role="tab" id="tab-derechos" aria-controls="panel-derechos" aria-selected="false" tabindex="-1" data-target="panel-derechos">Tus derechos</button>
+            </li>
+            <li style="--angle:210deg">
+              <button class="pill" role="tab" id="tab-hospitales" aria-controls="panel-hospitales" aria-selected="false" tabindex="-1" data-target="panel-hospitales">Hospitales públicos</button>
             </li>
           </ul>
         </nav>
       </div>
     </section>
 
-    <!-- ===== PANEL: Chatbot / Preguntas frecuentes ===== -->
-    <section id="panel-chat" class="content-panel" role="tabpanel" aria-labelledby="tab-chat">
+    <!-- ===== PANEL: Chat ===== -->
+    <section id="panel-chat" class="content-panel" role="tabpanel" aria-labelledby="tab-chat" tabindex="-1">
       <h2>Preguntale a Forrín</h2>
-      <p class="disclaimer">
-        Forrin da información general basada en fuentes oficiales. No reemplaza una consulta médica.
-        Ante una urgencia, llamá al <strong>911</strong> o acercate a la guardia más cercana.
-      </p>
 
-      <div class="chat-window" id="chat-window" aria-live="polite" aria-atomic="false">
-        <!-- los mensajes se insertan acá vía JS -->
+      <div class="chat-intro">
+        <figure class="chat-figure">
+          <img src="preguntale-a-forrin.png" alt="Forrín leyendo un folleto de salud" width="440" height="928" loading="lazy">
+        </figure>
+        <div class="disclaimer">
+          <p>Forrín da información general basada en fuentes oficiales. No reemplaza una consulta médica. Ante una urgencia, llamá al <strong>911</strong> o acercate a la guardia más cercana.</p>
+        </div>
       </div>
+
+      <div class="chat-window" id="chat-window" aria-live="polite" aria-atomic="false"></div>
 
       <form id="chat-form" class="chat-form">
         <label for="chat-input" class="visually-hidden">Escribí tu consulta</label>
         <input type="text" id="chat-input" name="chat-input" placeholder="Ej: ¿cómo consigo preservativos gratis?" autocomplete="off">
-        <button type="submit">Enviar</button>
+        <button type="submit" class="btn">Enviar</button>
       </form>
 
       <div class="quick-questions">
         <h3>Preguntas frecuentes</h3>
-        <ul id="faq-list" class="faq-list"><!-- render JS --></ul>
+        <p>Abrí el tema que te interese y tocá una pregunta para que Forrín la responda en el chat.</p>
+        <div id="faq-groups" class="faq-groups"></div>
       </div>
     </section>
 
-    <!-- ===== PANEL: Métodos anticonceptivos ===== -->
-    <section id="panel-metodos" class="content-panel" role="tabpanel" aria-labelledby="tab-metodos" hidden>
+    <!-- ===== PANEL: Métodos ===== -->
+    <section id="panel-metodos" class="content-panel" role="tabpanel" aria-labelledby="tab-metodos" tabindex="-1" hidden>
       <h2>Métodos anticonceptivos</h2>
-      <p>Todos son de acceso libre y gratuito en hospitales públicos, centros de salud, obras sociales y prepagas (Ley 25.673). El mejor método es el que vos elegís junto a un equipo de salud.</p>
-      <div id="metodos-grid" class="card-grid"><!-- render JS --></div>
+      <p class="panel-intro">Todos son de acceso libre y gratuito en hospitales públicos, centros de salud, obras sociales y prepagas (Ley 25.673). El mejor método es el que elegís junto a un equipo de salud.</p>
+      <div id="metodos-grid" class="card-grid"></div>
     </section>
 
-    <!-- ===== PANEL: ITS / Sífilis ===== -->
-    <section id="panel-its" class="content-panel" role="tabpanel" aria-labelledby="tab-its" hidden>
-      <h2>Infecciones de transmisión sexual (ITS)</h2>
-      <div id="its-content"><!-- render JS --></div>
+    <!-- ===== PANEL: ITS ===== -->
+    <section id="panel-its" class="content-panel" role="tabpanel" aria-labelledby="tab-its" tabindex="-1" hidden>
+      <h2>Infecciones de transmisión sexual</h2>
+      <div id="its-content"></div>
     </section>
 
-    <!-- ===== PANEL: Derechos / Normativa ===== -->
-    <section id="panel-derechos" class="content-panel" role="tabpanel" aria-labelledby="tab-derechos" hidden>
+    <!-- ===== PANEL: Voluntariado ===== -->
+    <section id="panel-voluntariado" class="content-panel" role="tabpanel" aria-labelledby="tab-voluntariado" tabindex="-1" hidden>
+      <h2>Voluntariado médico en la vía pública</h2>
+      <p class="panel-intro">Si trabajás en salud y querés sumarte a las jornadas de concientización en plazas, estaciones y centros de estudio, anotate en las fechas que puedas. Te escribimos con el punto de encuentro y los materiales unos días antes.</p>
+
+      <div class="volunteer-layout">
+        <form class="volunteer-form" id="volunteer-form" novalidate>
+
+          <fieldset>
+            <legend>Tus datos</legend>
+            <div class="field-grid">
+              <div class="field">
+                <label class="field-label" for="v-nombre">Nombre y apellido</label>
+                <input type="text" id="v-nombre" name="nombre" autocomplete="name" required>
+                <p class="error" id="err-nombre"></p>
+              </div>
+              <div class="field">
+                <label class="field-label" for="v-matricula">Matrícula (MN o MP)</label>
+                <input type="text" id="v-matricula" name="matricula" required>
+                <p class="error" id="err-matricula"></p>
+              </div>
+              <div class="field">
+                <label class="field-label" for="v-especialidad">Especialidad</label>
+                <select id="v-especialidad" name="especialidad">
+                  <option value="Medicina general">Medicina general</option>
+                  <option value="Ginecología">Ginecología</option>
+                  <option value="Infectología">Infectología</option>
+                  <option value="Urología">Urología</option>
+                  <option value="Pediatría / Adolescencia">Pediatría / Adolescencia</option>
+                  <option value="Enfermería">Enfermería</option>
+                  <option value="Obstetricia">Obstetricia</option>
+                  <option value="Psicología / Salud mental">Psicología / Salud mental</option>
+                  <option value="Trabajo social">Trabajo social</option>
+                  <option value="Otra">Otra</option>
+                </select>
+              </div>
+              <div class="field">
+                <label class="field-label" for="v-provincia">Provincia donde podés participar</label>
+                <select id="v-provincia" name="provincia" required>
+                  <option value="">Elegí una opción</option>
+                </select>
+                <p class="error" id="err-provincia"></p>
+              </div>
+              <div class="field">
+                <label class="field-label" for="v-email">Email</label>
+                <input type="email" id="v-email" name="email" autocomplete="email" required>
+                <p class="error" id="err-email"></p>
+              </div>
+              <div class="field">
+                <label class="field-label" for="v-telefono">Teléfono o WhatsApp</label>
+                <input type="tel" id="v-telefono" name="telefono" autocomplete="tel" inputmode="tel">
+                <p class="hint">Opcional. Lo usamos solo para avisos del día de la jornada.</p>
+              </div>
+            </div>
+          </fieldset>
+
+          <fieldset>
+            <legend>Fechas de campaña</legend>
+            <p class="hint">Elegí al menos una. Confirmá con el equipo la sede y el horario definitivo.</p>
+            <div class="check-grid" id="fechas-grid"></div>
+            <p class="error" id="err-fechas"></p>
+          </fieldset>
+
+          <fieldset>
+            <legend>En qué querés colaborar</legend>
+            <div class="check-grid" id="tareas-grid"></div>
+            <p class="error" id="err-tareas"></p>
+          </fieldset>
+
+          <fieldset>
+            <legend>Disponibilidad y notas</legend>
+            <div class="field-grid">
+              <div class="field">
+                <label class="field-label" for="v-turno">Turno</label>
+                <select id="v-turno" name="turno">
+                  <option value="Mañana">Mañana</option>
+                  <option value="Tarde">Tarde</option>
+                  <option value="Jornada completa">Jornada completa</option>
+                </select>
+              </div>
+              <div class="field">
+                <label class="field-label" for="v-personas">Cuántas personas traés</label>
+                <select id="v-personas" name="personas">
+                  <option value="Solo yo">Solo yo</option>
+                  <option value="2 a 3">2 a 3</option>
+                  <option value="4 o más">4 o más</option>
+                </select>
+              </div>
+              <div class="field full">
+                <label class="field-label" for="v-notas">Algo que debamos saber</label>
+                <textarea id="v-notas" name="notas" placeholder="Idiomas, experiencia en testeo rápido, materiales que podés aportar…"></textarea>
+              </div>
+            </div>
+
+            <div class="consent">
+              <label class="check" for="v-consent">
+                <input type="checkbox" id="v-consent" name="consent">
+                <span>Autorizo que el equipo de Forrín use mis datos para coordinar las jornadas, según la Ley 25.326 de protección de datos personales.</span>
+              </label>
+              <p class="error" id="err-consent"></p>
+            </div>
+          </fieldset>
+
+          <div class="form-status" id="form-status" role="alert" hidden></div>
+
+          <div>
+            <button type="submit" class="btn">Enviar inscripción</button>
+          </div>
+        </form>
+
+        <aside class="volunteer-aside">
+          <h3>Cómo funciona la jornada</h3>
+          <ul>
+            <li>Salidas de 3 horas, en equipos de cuatro personas.</li>
+            <li>Forrín aporta gazebo, folletería, preservativos y tests rápidos cuando la sede lo habilita.</li>
+            <li>Vos llevás matrícula y, si tenés, ambo o credencial de tu institución.</li>
+            <li>Cada equipo trabaja con un referente del centro de salud más cercano para derivar consultas.</li>
+            <li>Te confirmamos por mail hasta cinco días antes de la fecha.</li>
+          </ul>
+        </aside>
+      </div>
+    </section>
+
+    <!-- ===== PANEL: Derechos ===== -->
+    <section id="panel-derechos" class="content-panel" role="tabpanel" aria-labelledby="tab-derechos" tabindex="-1" hidden>
       <h2>Tus derechos</h2>
-      <div id="derechos-content"><!-- render JS --></div>
+      <div id="derechos-content"></div>
     </section>
 
     <!-- ===== PANEL: Hospitales ===== -->
-    <section id="panel-hospitales" class="content-panel" role="tabpanel" aria-labelledby="tab-hospitales" hidden>
+    <section id="panel-hospitales" class="content-panel" role="tabpanel" aria-labelledby="tab-hospitales" tabindex="-1" hidden>
       <h2>Hospitales públicos para hacerte análisis</h2>
-      <p>Listado de referencia con centros que ofrecen testeo de VIH/sífilis y consejería en salud sexual. No es exhaustivo: confirmá horarios llamando antes de ir.</p>
+      <p class="panel-intro">Listado de referencia con centros que ofrecen testeo de VIH y sífilis y consejería en salud sexual. No es exhaustivo: confirmá horarios llamando antes de ir.</p>
 
       <div class="filter-bar">
-        <label for="province-filter">Filtrar por provincia</label>
+        <label class="field-label" for="province-filter">Filtrar por provincia</label>
         <select id="province-filter">
           <option value="todas">Todas</option>
         </select>
       </div>
 
-      <ul id="hospitales-list" class="hospital-list"><!-- render JS --></ul>
+      <div class="map-frame">
+        <div id="mapa" role="application" aria-label="Mapa de centros de salud con testeo de VIH y sífilis">
+          <p class="map-fallback">Cargando el mapa. Si no aparece, revisá tu conexión: el listado de abajo funciona igual.</p>
+        </div>
+      </div>
+
+      <ul id="hospitales-list" class="hospital-list"></ul>
     </section>
 
   </main>
 
   <footer class="site-footer">
-    <p><strong>Línea Salud Sexual:</strong> 0800-222-3444 (consultas confidenciales y gratuitas) · <strong>Línea 144:</strong> atención a víctimas de violencia de género</p>
-    <p class="sources">Contenido basado en: Ministerio de Salud (Preguntas frecuentes y Métodos anticonceptivos), ANAC (Sífilis), y Ley 26.150 de Educación Sexual Integral — argentina.gob.ar</p>
+    <p class="lines"><strong>Línea Salud Sexual:</strong> 0800-222-3444, consultas confidenciales y gratuitas. <strong>Línea 144:</strong> atención a víctimas de violencia de género.</p>
+    <p class="sources">Contenido basado en Ministerio de Salud (preguntas frecuentes y métodos anticonceptivos), ANAC (sífilis) y Ley 26.150 de Educación Sexual Integral — argentina.gob.ar</p>
   </footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 
 <script>
 /* =========================================================
-   FORRIN · knowledge-base.js (INCRUSTADO)
+   FORRÍN · knowledge-base.js
    ========================================================= */
 
 const FAQ_DB = [
@@ -502,7 +970,7 @@ const FAQ_DB = [
     id: "preservativo",
     question: "¿Por qué se recomienda siempre el preservativo?",
     keywords: ["preservativo", "condón", "protección", "doble protección"],
-    answer: "El preservativo es el único método que, además de prevenir el embarazo, protege de infecciones de transmisión sexual (ITS) y VIH. Por eso se recomienda la 'doble protección': preservativo + otro método, para sumar efectividad anticonceptiva y prevención de ITS."
+    answer: "El preservativo es el único método que, además de prevenir el embarazo, protege de infecciones de transmisión sexual (ITS) y VIH. Por eso se recomienda la doble protección: preservativo más otro método, para sumar efectividad anticonceptiva y prevención de ITS."
   },
   {
     id: "quirurgica",
@@ -526,7 +994,7 @@ const FAQ_DB = [
     id: "discapacidad",
     question: "¿Qué derechos sexuales tienen las personas con discapacidad?",
     keywords: ["discapacidad", "derechos"],
-    answer: "Los mismos derechos sexuales y reproductivos que cualquier persona. La idea de que las personas con discapacidad 'no tienen sexualidad' o no pueden decidir sobre su cuerpo es falsa y discriminatoria."
+    answer: "Los mismos derechos sexuales y reproductivos que cualquier persona. La idea de que las personas con discapacidad no tienen sexualidad o no pueden decidir sobre su cuerpo es falsa y discriminatoria."
   },
   {
     id: "sifilis-que-es",
@@ -544,7 +1012,7 @@ const FAQ_DB = [
     id: "sifilis-prevencion",
     question: "¿Cómo me hago un test de sífilis o VIH?",
     keywords: ["prevenir", "prevencion", "testeo", "test", "hacerme un test"],
-    answer: "Se recomienda testearte aunque no tengas síntomas, especialmente si tuviste una pareja nueva, relaciones sin preservativo o tu pareja tuvo alguna ITS. Hay tests rápidos con resultado en menos de 30 minutos, disponibles gratis en hospitales públicos y centros de salud. Mirá la sección 'Hospitales públicos' de esta app para encontrar uno cerca."
+    answer: "Se recomienda testearte aunque no tengas síntomas, especialmente si tuviste una pareja nueva, relaciones sin preservativo o tu pareja tuvo alguna ITS. Hay tests rápidos con resultado en menos de 30 minutos, disponibles gratis en hospitales públicos y centros de salud. Mirá la sección Hospitales públicos de esta app para encontrar uno cerca."
   },
   {
     id: "sifilis-tratamiento",
@@ -559,21 +1027,37 @@ const FAQ_DB = [
     answer: "La Ley 26.150 establece que todos los estudiantes, en escuelas públicas y privadas de todo el país, tienen derecho a recibir Educación Sexual Integral: contenidos biológicos, psicológicos, sociales, afectivos y éticos, con información confiable y actualizada, desde el nivel inicial hasta la formación docente."
   },
   {
+    id: "voluntariado",
+    question: "Soy profesional de la salud, ¿cómo me sumo como voluntario?",
+    keywords: ["voluntario", "voluntariado", "medico", "sumarme", "colaborar", "campaña", "jornada"],
+    answer: "Entrá en la sección Voluntariado médico y completá el formulario con tu matrícula, la provincia donde podés participar y las fechas de campaña que te queden bien. Te escribimos por mail con el punto de encuentro y los materiales unos días antes de la jornada."
+  },
+  {
     id: "violencia",
     question: "Sufrí una situación de abuso o violencia, ¿qué hago?",
     keywords: ["abuso", "violación", "violencia", "obligaron", "forzaron", "no consenti"],
-    answer: "Lo que te pasó no es tu responsabilidad y no tenés que atravesarlo sola/o. Podés llamar a la Línea 144 (atención a víctimas de violencia de género, las 24 horas) o acercarte a la guardia de cualquier hospital público. Si el hecho fue reciente, un hospital también puede orientarte sobre anticoncepción de emergencia y, si corresponde, sobre la Interrupción Legal del Embarazo (Ley 27.610)."
+    answer: "Lo que te pasó no es tu responsabilidad y no tenés que atravesarlo sola o solo. Podés llamar a la Línea 144 (atención a víctimas de violencia de género, las 24 horas) o acercarte a la guardia de cualquier hospital público. Si el hecho fue reciente, un hospital también puede orientarte sobre anticoncepción de emergencia y, si corresponde, sobre la Interrupción Legal del Embarazo (Ley 27.610)."
   }
+];
+
+/* Agrupa las preguntas del chat para que no queden en una lista larga.
+   Si agregás una pregunta a FAQ_DB, sumá su id acá. */
+const FAQ_GRUPOS = [
+  { titulo: "Acceso y métodos", ids: ["metodos-acceso", "preservativo", "quirurgica", "consulta"], abierto: true },
+  { titulo: "ITS y testeo", ids: ["sifilis-prevencion", "sifilis-que-es", "sifilis-sintomas", "sifilis-tratamiento"] },
+  { titulo: "Derechos y edades", ids: ["adolescentes", "ive-ile", "esi", "discapacidad"] },
+  { titulo: "Si necesitás ayuda ahora", ids: ["violencia"] },
+  { titulo: "Sumarte como voluntario", ids: ["voluntariado"] }
 ];
 
 const METODOS_DB = [
   { nombre: "Preservativo", tag: "Único que previene ITS", desc: "Método de barrera. Se usa desde el inicio hasta el final de la relación (vaginal, anal u oral). Revisá el vencimiento y usá lubricante a base de agua." },
   { nombre: "Pastillas combinadas", tag: "Hormonal diario", desc: "Combinan dos hormonas. Se toman una vez por día; requieren regularidad para ser efectivas." },
-  { nombre: "Pastillas de una sola hormona", tag: "Hormonal diario", desc: "Conocida como minipíldora. Alternativa para personas que no pueden tomar estrógeno, por ejemplo, durante la lactancia." },
+  { nombre: "Pastillas de una sola hormona", tag: "Hormonal diario", desc: "Conocida como minipíldora. Alternativa para personas que no pueden tomar estrógeno, por ejemplo durante la lactancia." },
   { nombre: "Inyectables", tag: "Mensual o trimestral", desc: "Aplicación hormonal cada 1 o cada 3 meses, según el tipo, en un centro de salud." },
   { nombre: "DIU", tag: "Larga duración", desc: "Dispositivo intrauterino colocado por un profesional de la salud. Protege por varios años y es reversible." },
   { nombre: "Implante subdérmico", tag: "Larga duración", desc: "Varilla pequeña que se coloca bajo la piel del brazo. Libera hormonas de forma gradual durante varios años." },
-  { nombre: "Anticoncepción hormonal de emergencia (AHE)", tag: "Uso ocasional", desc: "Se usa después de una relación sin protección o ante una falla del método habitual. Cuanto antes se tome, más efectiva es. No reemplaza un método regular." },
+  { nombre: "Anticoncepción hormonal de emergencia", tag: "Uso ocasional", desc: "Se usa después de una relación sin protección o ante una falla del método habitual. Cuanto antes se tome, más efectiva es. No reemplaza un método regular." },
   { nombre: "Ligadura tubaria", tag: "Método permanente", desc: "Cirugía que impide el paso de óvulos al útero. Es de difícil reversión; se accede siendo mayor de edad (Ley 26.130)." },
   { nombre: "Vasectomía", tag: "Método permanente", desc: "Cirugía que corta o liga los conductos deferentes. Es de difícil reversión; se accede siendo mayor de edad (Ley 26.130)." }
 ];
@@ -591,11 +1075,11 @@ const ITS_INFO = {
     },
     {
       titulo: "Síntomas posibles",
-      texto: "Fase primaria: una úlcera indolora (chancro) que cicatriza sola aunque la infección continúa. Fase secundaria: erupción en piel (palmas y plantas), fiebre, ganglios inflamados — la etapa de mayor contagio. Fase latente: sin síntomas visibles, con riesgo de complicaciones si no se trata."
+      texto: "Fase primaria: una úlcera indolora (chancro) que cicatriza sola aunque la infección continúa. Fase secundaria: erupción en piel (palmas y plantas), fiebre, ganglios inflamados, la etapa de mayor contagio. Fase latente: sin síntomas visibles, con riesgo de complicaciones si no se trata."
     },
     {
       titulo: "Prevención y testeo",
-      texto: "Usar preservativo en toda relación sexual, revisar su vencimiento y usar lubricante a base de agua. Testearte regularmente, en especial ante parejas nuevas o relaciones sin protección: hay test rápidos con resultado en menos de 30 minutos, gratuitos en hospitales públicos."
+      texto: "Usar preservativo en toda relación sexual, revisar su vencimiento y usar lubricante a base de agua. Testearte regularmente, en especial ante parejas nuevas o relaciones sin protección: hay tests rápidos con resultado en menos de 30 minutos, gratuitos en hospitales públicos."
     },
     {
       titulo: "Tratamiento",
@@ -614,7 +1098,7 @@ const DERECHOS_INFO = [
     texto: "Habilita el acceso a la ligadura tubaria y la vasectomía a partir de la mayoría de edad, de forma autónoma y sin necesidad de autorización de terceros; solo se requiere dejar la decisión por escrito tras recibir información completa."
   },
   {
-    titulo: "Ley 26.150 — Educación Sexual Integral (ESI)",
+    titulo: "Ley 26.150 — Educación Sexual Integral",
     texto: "Establece que todos los estudiantes, en escuelas públicas y privadas de todo el país, tienen derecho a recibir educación sexual integral con contenidos biológicos, psicológicos, sociales, afectivos y éticos."
   },
   {
@@ -627,110 +1111,61 @@ const DERECHOS_INFO = [
   }
 ];
 
-/* Directorio curado de hospitales públicos (muestra representativa, no exhaustiva).
-   Datos de contacto verificados en las webs oficiales de cada hospital / listado del GCBA.
-   Recomendación: confirmar horarios telefónicamente antes de ir. */
+/* Coordenadas aproximadas, cargadas a mano para el mapa.
+   Si sumás centros, agregá lat y lng o el marcador no se dibuja. */
 const HOSPITALES_DB = [
-  {
-    nombre: "Hospital de Infecciosas Francisco J. Muñiz",
-    provincia: "CABA",
-    barrio: "Parque Patricios",
-    direccion: "Uspallata 2272",
-    telefono: "011 4360-5700",
-    servicios: ["Infectología de referencia", "Test VIH/ITS", "Consejería salud sexual"]
-  },
-  {
-    nombre: "Hospital General de Agudos Juan A. Fernández",
-    provincia: "CABA",
-    barrio: "Palermo",
-    direccion: "Av. Cerviño 3356",
-    telefono: "011 4808-2600",
-    servicios: ["Consultorios externos", "Salud sexual y reproductiva"]
-  },
-  {
-    nombre: "Hospital General de Agudos Bernardino Rivadavia",
-    provincia: "CABA",
-    barrio: "Recoleta",
-    direccion: "Av. Las Heras 2670",
-    telefono: "011 4809-2000",
-    servicios: ["Consultorios externos", "Guardia 24 hs"]
-  },
-  {
-    nombre: "Hospital General de Agudos Cosme Argerich",
-    provincia: "CABA",
-    barrio: "La Boca",
-    direccion: "Pi y Margall 750",
-    telefono: "011 4121-0833",
-    servicios: ["Test rápido VIH", "Test rápido sífilis", "Servicio de Infectología"]
-  },
-  {
-    nombre: "Hospital General de Agudos Teodoro Álvarez",
-    provincia: "CABA",
-    barrio: "Flores",
-    direccion: "Aranguren 2701",
-    telefono: "011 4630-2900",
-    servicios: ["Test rápido VIH", "Test rápido sífilis", "Servicio de Infectología"]
-  },
-  {
-    nombre: "Hospital General de Agudos Carlos G. Durand",
-    provincia: "CABA",
-    barrio: "Caballito",
-    direccion: "Av. Díaz Vélez 5044",
-    telefono: "011 4982-5555",
-    servicios: ["Test rápido VIH", "Test rápido sífilis", "Infectología y Salud Mental"]
-  },
-  {
-    nombre: "Hospital General de Agudos José M. Ramos Mejía",
-    provincia: "CABA",
-    barrio: "Balvanera",
-    direccion: "Urquiza 609",
-    telefono: "WhatsApp 11 3386-8530",
-    servicios: ["Clínica de Salud Sexual", "Test rápido VIH", "Test rápido sífilis"]
-  },
-  {
-    nombre: "Hospital General de Agudos José A. Penna",
-    provincia: "CABA",
-    barrio: "Barracas",
-    direccion: "Almafuerte 408",
-    telefono: "011 4911-3030",
-    servicios: ["Test rápido VIH", "Test rápido sífilis", "Servicio de Infectología"]
-  },
-  {
-    nombre: "Hospital General de Agudos Enrique Tornú",
-    provincia: "CABA",
-    barrio: "Parque Chas",
-    direccion: "Av. Combatientes de Malvinas 3002",
-    telefono: "011 4521-8700",
-    servicios: ["Test rápido VIH", "Test rápido sífilis"]
-  },
-  {
-    nombre: "Hospital Nacional Prof. Alejandro Posadas",
-    provincia: "Buenos Aires (Provincia)",
-    barrio: "El Palomar, Morón",
-    direccion: "Av. Pte. Illia y Marconi s/n",
-    telefono: "011 4469-9200",
-    servicios: ["Hospital de referencia nacional", "Consultorios de infectología"]
-  },
-  {
-    nombre: "Hospital Provincial del Centenario",
-    provincia: "Santa Fe",
-    barrio: "Rosario",
-    direccion: "Urquiza 3101",
-    telefono: "0341 4724643",
-    servicios: ["Consultorio de VIH (lun. a vie. 8 a 12 hs)", "Consejería salud sexual"]
-  }
+  { id: "muniz", nombre: "Hospital de Infecciosas Francisco J. Muñiz", provincia: "CABA", barrio: "Parque Patricios", direccion: "Uspallata 2272", telefono: "011 4360-5700", lat: -34.6392, lng: -58.4046, servicios: ["Infectología de referencia", "Test VIH e ITS", "Consejería salud sexual"] },
+  { id: "fernandez", nombre: "Hospital General de Agudos Juan A. Fernández", provincia: "CABA", barrio: "Palermo", direccion: "Av. Cerviño 3356", telefono: "011 4808-2600", lat: -34.5793, lng: -58.4093, servicios: ["Consultorios externos", "Salud sexual y reproductiva"] },
+  { id: "rivadavia", nombre: "Hospital General de Agudos Bernardino Rivadavia", provincia: "CABA", barrio: "Recoleta", direccion: "Av. Las Heras 2670", telefono: "011 4809-2000", lat: -34.5877, lng: -58.4003, servicios: ["Consultorios externos", "Guardia 24 hs"] },
+  { id: "argerich", nombre: "Hospital General de Agudos Cosme Argerich", provincia: "CABA", barrio: "La Boca", direccion: "Pi y Margall 750", telefono: "011 4121-0833", lat: -34.6295, lng: -58.3702, servicios: ["Test rápido VIH", "Test rápido sífilis", "Infectología"] },
+  { id: "alvarez", nombre: "Hospital General de Agudos Teodoro Álvarez", provincia: "CABA", barrio: "Flores", direccion: "Aranguren 2701", telefono: "011 4630-2900", lat: -34.6268, lng: -58.4614, servicios: ["Test rápido VIH", "Test rápido sífilis", "Infectología"] },
+  { id: "durand", nombre: "Hospital General de Agudos Carlos G. Durand", provincia: "CABA", barrio: "Caballito", direccion: "Av. Díaz Vélez 5044", telefono: "011 4982-5555", lat: -34.6100, lng: -58.4335, servicios: ["Test rápido VIH", "Test rápido sífilis", "Infectología y salud mental"] },
+  { id: "ramos-mejia", nombre: "Hospital General de Agudos José M. Ramos Mejía", provincia: "CABA", barrio: "Balvanera", direccion: "Urquiza 609", telefono: "WhatsApp 11 3386-8530", lat: -34.6164, lng: -58.4028, servicios: ["Clínica de salud sexual", "Test rápido VIH", "Test rápido sífilis"] },
+  { id: "penna", nombre: "Hospital General de Agudos José A. Penna", provincia: "CABA", barrio: "Barracas", direccion: "Almafuerte 408", telefono: "011 4911-3030", lat: -34.6428, lng: -58.3962, servicios: ["Test rápido VIH", "Test rápido sífilis", "Infectología"] },
+  { id: "tornu", nombre: "Hospital General de Agudos Enrique Tornú", provincia: "CABA", barrio: "Parque Chas", direccion: "Av. Combatientes de Malvinas 3002", telefono: "011 4521-8700", lat: -34.5847, lng: -58.4770, servicios: ["Test rápido VIH", "Test rápido sífilis"] },
+  { id: "posadas", nombre: "Hospital Nacional Prof. Alejandro Posadas", provincia: "Buenos Aires (Provincia)", barrio: "El Palomar, Morón", direccion: "Av. Pte. Illia y Marconi s/n", telefono: "011 4469-9200", lat: -34.6265, lng: -58.5790, servicios: ["Referencia nacional", "Consultorios de infectología"] },
+  { id: "centenario", nombre: "Hospital Provincial del Centenario", provincia: "Santa Fe", barrio: "Rosario", direccion: "Urquiza 3101", telefono: "0341 472-4643", lat: -32.9450, lng: -60.6600, servicios: ["Consultorio de VIH, lunes a viernes de 8 a 12", "Consejería salud sexual"] }
+];
+
+/* Fechas de campaña para el voluntariado.
+   Revisá cada año el calendario oficial antes de publicarlas. */
+const FECHAS_CAMPANA = [
+  { id: "f-preservativo", fecha: "13 de febrero", nombre: "Día Internacional del Preservativo" },
+  { id: "f-discriminacion", fecha: "1 de marzo", nombre: "Día Cero Discriminación" },
+  { id: "f-vph", fecha: "4 de marzo", nombre: "Día Internacional de Concientización sobre el VPH" },
+  { id: "f-mujeres", fecha: "28 de mayo", nombre: "Día de Acción por la Salud de las Mujeres" },
+  { id: "f-salud-sexual", fecha: "4 de septiembre", nombre: "Día Mundial de la Salud Sexual" },
+  { id: "f-embarazo", fecha: "26 de septiembre", nombre: "Día de Prevención del Embarazo no Planificado en Adolescentes" },
+  { id: "f-aborto", fecha: "28 de septiembre", nombre: "Día de Acción por el Acceso al Aborto Legal y Seguro" },
+  { id: "f-vih", fecha: "1 de diciembre", nombre: "Día Mundial de la Respuesta al VIH y el Sida" }
+];
+
+const TAREAS_VOLUNTARIADO = [
+  { id: "t-consejeria", nombre: "Consejería uno a uno en el stand" },
+  { id: "t-testeo", nombre: "Testeo rápido de VIH y sífilis" },
+  { id: "t-charlas", nombre: "Charlas breves en escuelas y terciarios" },
+  { id: "t-materiales", nombre: "Entrega de preservativos y folletería" },
+  { id: "t-derivacion", nombre: "Derivación a turnos en centros de salud" },
+  { id: "t-coordinacion", nombre: "Coordinación del equipo en la jornada" }
+];
+
+const PROVINCIAS = [
+  "CABA", "Buenos Aires", "Catamarca", "Chaco", "Chubut", "Córdoba", "Corrientes",
+  "Entre Ríos", "Formosa", "Jujuy", "La Pampa", "La Rioja", "Mendoza", "Misiones",
+  "Neuquén", "Río Negro", "Salta", "San Juan", "San Luis", "Santa Cruz", "Santa Fe",
+  "Santiago del Estero", "Tierra del Fuego", "Tucumán"
 ];
 
 
 /* =========================================================
-   FORRIN · chatbot.js (INCRUSTADO)
+   FORRÍN · chatbot.js
    ========================================================= */
 
 function normalizar(texto) {
   return texto
     .toLowerCase()
     .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "") // saca acentos
+    .replace(/[\u0300-\u036f]/g, "")
     .replace(/[^\w\s]/g, " ")
     .trim();
 }
@@ -748,7 +1183,7 @@ function buscarRespuesta(mensajeUsuario) {
 
   if (esSaludo(texto)) {
     return {
-      answer: "¡Hola! Soy Forrin 👋. Puedo ayudarte con dudas sobre métodos anticonceptivos, ITS, tus derechos o dónde hacerte un análisis. ¿Qué te gustaría saber?",
+      answer: "¡Hola! Soy Forrín. Puedo ayudarte con dudas sobre métodos anticonceptivos, ITS, tus derechos o dónde hacerte un análisis. ¿Qué te gustaría saber?",
       matchedId: null
     };
   }
@@ -781,8 +1216,8 @@ function buscarRespuesta(mensajeUsuario) {
 }
 
 const RESPUESTAS_FALLBACK = [
-  "No tengo una respuesta puntual para eso todavía. Te recomiendo llamar a la Línea Salud Sexual 0800-222-3444 (gratis y confidencial) o mirar las preguntas frecuentes de abajo.",
-  "Esa consulta me excede un poco. Un profesional de la salud en tu centro de salud u hospital más cercano puede orientarte mejor. ¿Querés que te muestre el listado de hospitales?"
+  "No tengo una respuesta puntual para eso todavía. Podés llamar a la Línea Salud Sexual 0800-222-3444 (gratis y confidencial) o mirar las preguntas frecuentes de abajo.",
+  "Esa consulta me excede. Un profesional de la salud en tu centro de salud u hospital más cercano puede orientarte mejor. Mirá la sección Hospitales públicos para encontrar uno."
 ];
 
 function respuestaFallback() {
@@ -792,7 +1227,7 @@ function respuestaFallback() {
 
 
 /* =========================================================
-   FORRIN · app.js (INCRUSTADO)
+   FORRÍN · app.js
    ========================================================= */
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -804,29 +1239,31 @@ document.addEventListener("DOMContentLoaded", () => {
   renderHospitales();
   initChat();
   initFiltroHospitales();
+  Mapa.init();
+  initVoluntariado();
 });
 
+/* ---------- Tabs ---------- */
 function initTabs() {
   const tabs = Array.from(document.querySelectorAll('[role="tab"]'));
   const panels = tabs.map(tab => document.getElementById(tab.getAttribute("aria-controls")));
 
-  function activar(index) {
+  function activar(index, { mover = false } = {}) {
     tabs.forEach((tab, i) => {
       const activo = i === index;
       tab.setAttribute("aria-selected", activo ? "true" : "false");
       tab.tabIndex = activo ? 0 : -1;
       panels[i].hidden = !activo;
     });
-    tabs[index].focus();
+    if (mover) tabs[index].focus();
   }
 
   tabs.forEach((tab, index) => {
     tab.addEventListener("click", () => {
-      tabs.forEach((t, i) => {
-        t.setAttribute("aria-selected", i === index ? "true" : "false");
-        t.tabIndex = i === index ? 0 : -1;
-        panels[i].hidden = i !== index;
-      });
+      activar(index);
+      if (window.matchMedia("(max-width: 899px)").matches) {
+        panels[index].scrollIntoView({ block: "start" });
+      }
     });
 
     tab.addEventListener("keydown", (e) => {
@@ -837,25 +1274,55 @@ function initTabs() {
       if (e.key === "End") newIndex = tabs.length - 1;
       if (newIndex !== null) {
         e.preventDefault();
-        activar(newIndex);
+        activar(newIndex, { mover: true });
       }
     });
   });
+
+  // Permite abrir una pestaña desde el chat u otros enlaces internos
+  window.abrirPanel = (panelId) => {
+    const i = tabs.findIndex(t => t.getAttribute("aria-controls") === panelId);
+    if (i >= 0) activar(i, { mover: true });
+  };
 }
 
+/* ---------- Render de contenido ---------- */
 function renderFAQ() {
-  const list = document.getElementById("faq-list");
-  FAQ_DB.forEach(item => {
-    const li = document.createElement("li");
-    const btn = document.createElement("button");
-    btn.type = "button";
-    btn.textContent = item.question;
-    btn.addEventListener("click", () => {
-      agregarMensaje("user", item.question);
-      agregarMensaje("bot", item.answer);
+  const cont = document.getElementById("faq-groups");
+
+  FAQ_GRUPOS.forEach(grupo => {
+    const preguntas = grupo.ids
+      .map(id => FAQ_DB.find(f => f.id === id))
+      .filter(Boolean);
+    if (!preguntas.length) return;
+
+    const details = document.createElement("details");
+    details.className = "faq-group";
+    details.name = "faq";           // solo una abierta a la vez (navegadores modernos)
+    if (grupo.abierto) details.open = true;
+
+    const summary = document.createElement("summary");
+    summary.innerHTML = `<span>${grupo.titulo}</span><span class="count">${preguntas.length}</span>`;
+    details.appendChild(summary);
+
+    const ul = document.createElement("ul");
+    ul.className = "faq-list";
+    preguntas.forEach(item => {
+      const li = document.createElement("li");
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.textContent = item.question;
+      btn.addEventListener("click", () => {
+        agregarMensaje("user", item.question);
+        setTimeout(() => agregarMensaje("bot", item.answer), 250);
+        document.getElementById("chat-window").scrollIntoView({ block: "nearest" });
+      });
+      li.appendChild(btn);
+      ul.appendChild(li);
     });
-    li.appendChild(btn);
-    list.appendChild(li);
+
+    details.appendChild(ul);
+    cont.appendChild(details);
   });
 }
 
@@ -864,11 +1331,14 @@ function renderMetodos() {
   METODOS_DB.forEach(m => {
     const card = document.createElement("article");
     card.className = "card";
-    card.innerHTML = `
-      <span class="tag">${m.tag}</span>
-      <h3>${m.nombre}</h3>
-      <p>${m.desc}</p>
-    `;
+    const tag = document.createElement("span");
+    tag.className = "tag";
+    tag.textContent = m.tag;
+    const h3 = document.createElement("h3");
+    h3.textContent = m.nombre;
+    const p = document.createElement("p");
+    p.textContent = m.desc;
+    card.append(tag, h3, p);
     grid.appendChild(card);
   });
 }
@@ -876,13 +1346,18 @@ function renderMetodos() {
 function renderITS() {
   const container = document.getElementById("its-content");
   const intro = document.createElement("p");
+  intro.className = "panel-intro";
   intro.textContent = ITS_INFO.intro;
   container.appendChild(intro);
 
   ITS_INFO.bloques.forEach(b => {
     const div = document.createElement("div");
     div.className = "info-block";
-    div.innerHTML = `<h3>${b.titulo}</h3><p>${b.texto}</p>`;
+    const h3 = document.createElement("h3");
+    h3.textContent = b.titulo;
+    const p = document.createElement("p");
+    p.textContent = b.texto;
+    div.append(h3, p);
     container.appendChild(div);
   });
 }
@@ -892,36 +1367,57 @@ function renderDerechos() {
   DERECHOS_INFO.forEach(d => {
     const div = document.createElement("div");
     div.className = "info-block";
-    div.innerHTML = `<h3>${d.titulo}</h3><p>${d.texto}</p>`;
+    const h3 = document.createElement("h3");
+    h3.textContent = d.titulo;
+    const p = document.createElement("p");
+    p.textContent = d.texto;
+    div.append(h3, p);
     container.appendChild(div);
   });
+}
+
+function urlComoLlegar(h) {
+  return "https://www.google.com/maps/search/" + encodeURIComponent(`${h.nombre} ${h.direccion} ${h.provincia}`);
+}
+
+function filtrarHospitales(provincia) {
+  return provincia === "todas"
+    ? HOSPITALES_DB
+    : HOSPITALES_DB.filter(h => h.provincia === provincia);
 }
 
 function renderHospitales(filtroProvincia = "todas") {
   const list = document.getElementById("hospitales-list");
   list.innerHTML = "";
 
-  const datos = filtroProvincia === "todas"
-    ? HOSPITALES_DB
-    : HOSPITALES_DB.filter(h => h.provincia === filtroProvincia);
+  const datos = filtrarHospitales(filtroProvincia);
 
   if (datos.length === 0) {
-    list.innerHTML = "<p>No hay resultados para ese filtro.</p>";
+    const li = document.createElement("li");
+    li.className = "hospital-card";
+    li.textContent = "Todavía no hay centros cargados para esa provincia. Llamá al 0800-222-3444 y te orientan sobre el más cercano.";
+    list.appendChild(li);
     return;
   }
 
   datos.forEach(h => {
     const li = document.createElement("li");
     li.className = "hospital-card";
-    const mapsUrl = "https://www.google.com/maps/search/" + encodeURIComponent(`${h.nombre} ${h.direccion} ${h.provincia}`);
     li.innerHTML = `
       <h3>${h.nombre}</h3>
-      <p>${h.direccion} — ${h.barrio}, ${h.provincia}</p>
-      <p>📞 ${h.telefono}</p>
+      <p class="meta">${h.direccion} — ${h.barrio}, ${h.provincia}</p>
+      <p class="meta">Tel. ${h.telefono}</p>
       <div class="services">${h.servicios.map(s => `<span>${s}</span>`).join("")}</div>
-      <p><a href="${mapsUrl}" target="_blank" rel="noopener noreferrer">Ver cómo llegar ↗</a></p>
+      <div class="card-actions">
+        <button type="button" class="map-link" data-hospital="${h.id}">Ver en el mapa</button>
+        <a href="${urlComoLlegar(h)}" target="_blank" rel="noopener noreferrer">Cómo llegar</a>
+      </div>
     `;
     list.appendChild(li);
+  });
+
+  list.querySelectorAll(".map-link").forEach(btn => {
+    btn.addEventListener("click", () => Mapa.enfocar(btn.dataset.hospital));
   });
 }
 
@@ -934,9 +1430,93 @@ function initFiltroHospitales() {
     opt.textContent = p;
     select.appendChild(opt);
   });
-  select.addEventListener("change", () => renderHospitales(select.value));
+  select.addEventListener("change", () => {
+    renderHospitales(select.value);
+    Mapa.aplicarFiltro(select.value);
+  });
 }
 
+/* ---------- Mapa interactivo (Leaflet + tiles CARTO) ---------- */
+const Mapa = (() => {
+  let map = null;
+  let capa = null;
+  const marcadores = new Map();
+
+  function init() {
+    const cont = document.getElementById("mapa");
+    if (!cont) return;
+
+    if (typeof L === "undefined") {
+      cont.innerHTML = '<p class="map-fallback">No se pudo cargar el mapa. Usá el listado de abajo o el enlace “Cómo llegar” de cada centro.</p>';
+      return;
+    }
+
+    cont.innerHTML = "";
+    map = L.map(cont, { scrollWheelZoom: false });
+
+    L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png", {
+      maxZoom: 19,
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>'
+    }).addTo(map);
+
+    capa = L.layerGroup().addTo(map);
+    aplicarFiltro("todas");
+
+    // El panel arranca oculto: al mostrarse hay que recalcular el tamaño
+    document.querySelectorAll('[aria-controls="panel-hospitales"]').forEach(tab => {
+      tab.addEventListener("click", () => setTimeout(() => map.invalidateSize(), 60));
+    });
+  }
+
+  function aplicarFiltro(provincia) {
+    if (!map || !capa) return;
+    capa.clearLayers();
+    marcadores.clear();
+
+    const datos = filtrarHospitales(provincia).filter(h => h.lat && h.lng);
+    if (!datos.length) {
+      map.setView([-38.0, -63.6], 4);
+      return;
+    }
+
+    const icono = L.divIcon({
+      className: "",
+      html: '<span class="marker-pin"></span>',
+      iconSize: [18, 18],
+      iconAnchor: [9, 9],
+      popupAnchor: [0, -10]
+    });
+
+    datos.forEach(h => {
+      const marker = L.marker([h.lat, h.lng], { icon: icono, title: h.nombre });
+      marker.bindPopup(`
+        <strong>${h.nombre}</strong>
+        ${h.direccion} — ${h.barrio}<br>
+        Tel. ${h.telefono}<br>
+        <a href="${urlComoLlegar(h)}" target="_blank" rel="noopener noreferrer">Cómo llegar</a>
+      `);
+      marker.addTo(capa);
+      marcadores.set(h.id, marker);
+    });
+
+    const bounds = L.latLngBounds(datos.map(h => [h.lat, h.lng]));
+    map.fitBounds(bounds, { padding: [40, 40], maxZoom: 14 });
+  }
+
+  function enfocar(id) {
+    const marker = marcadores.get(id);
+    const frame = document.querySelector(".map-frame");
+    if (!map || !marker) return;
+    if (frame) frame.scrollIntoView({ block: "center" });
+    map.invalidateSize();
+    map.setView(marker.getLatLng(), 15, { animate: true });
+    marker.openPopup();
+  }
+
+  return { init, aplicarFiltro, enfocar };
+})();
+
+/* ---------- Chat ---------- */
 function agregarMensaje(tipo, texto) {
   const chatWindow = document.getElementById("chat-window");
   const msg = document.createElement("div");
@@ -947,7 +1527,7 @@ function agregarMensaje(tipo, texto) {
 }
 
 function initChat() {
-  agregarMensaje("bot", "¡Hola! Soy Forrín. Preguntame lo que necesites saber sobre salud sexual, métodos anticonceptivos, ITS o tus derechos.");
+  agregarMensaje("bot", "¡Hola! Soy Forrín. Preguntame lo que necesites sobre salud sexual, métodos anticonceptivos, ITS o tus derechos.");
 
   const form = document.getElementById("chat-form");
   const input = document.getElementById("chat-input");
@@ -962,11 +1542,160 @@ function initChat() {
     const resultado = buscarRespuesta(texto);
     const respuesta = resultado ? resultado.answer : respuestaFallback();
 
-    // pequeño delay para que se sienta conversacional
     setTimeout(() => agregarMensaje("bot", respuesta), 350);
 
     input.value = "";
     input.focus();
+  });
+}
+
+/* ---------- Voluntariado ---------- */
+function initVoluntariado() {
+  const fechasGrid = document.getElementById("fechas-grid");
+  FECHAS_CAMPANA.forEach(f => {
+    const label = document.createElement("label");
+    label.className = "check";
+    label.setAttribute("for", f.id);
+    label.innerHTML = `
+      <input type="checkbox" id="${f.id}" name="fechas" value="${f.fecha} — ${f.nombre}">
+      <span><span class="date">${f.fecha}</span>${f.nombre}</span>
+    `;
+    fechasGrid.appendChild(label);
+  });
+
+  const tareasGrid = document.getElementById("tareas-grid");
+  TAREAS_VOLUNTARIADO.forEach(t => {
+    const label = document.createElement("label");
+    label.className = "check";
+    label.setAttribute("for", t.id);
+    label.innerHTML = `
+      <input type="checkbox" id="${t.id}" name="tareas" value="${t.nombre}">
+      <span>${t.nombre}</span>
+    `;
+    tareasGrid.appendChild(label);
+  });
+
+  const provinciaSelect = document.getElementById("v-provincia");
+  PROVINCIAS.forEach(p => {
+    const opt = document.createElement("option");
+    opt.value = p;
+    opt.textContent = p;
+    provinciaSelect.appendChild(opt);
+  });
+
+  const form = document.getElementById("volunteer-form");
+  form.addEventListener("submit", manejarEnvioVoluntariado);
+}
+
+function marcarError(campoId, errorId, mensaje) {
+  const campo = document.getElementById(campoId);
+  const error = document.getElementById(errorId);
+  if (campo) campo.setAttribute("aria-invalid", mensaje ? "true" : "false");
+  if (error) error.textContent = mensaje || "";
+}
+
+function manejarEnvioVoluntariado(e) {
+  e.preventDefault();
+  const form = e.currentTarget;
+  const status = document.getElementById("form-status");
+
+  const nombre = form.nombre.value.trim();
+  const matricula = form.matricula.value.trim();
+  const email = form.email.value.trim();
+  const provincia = form.provincia.value;
+  const fechas = Array.from(form.querySelectorAll('input[name="fechas"]:checked')).map(c => c.value);
+  const tareas = Array.from(form.querySelectorAll('input[name="tareas"]:checked')).map(c => c.value);
+  const consent = form.consent.checked;
+
+  const errores = [];
+
+  marcarError("v-nombre", "err-nombre", nombre ? "" : "Escribí tu nombre y apellido.");
+  if (!nombre) errores.push("v-nombre");
+
+  marcarError("v-matricula", "err-matricula", matricula ? "" : "Necesitamos tu número de matrícula para acreditarte.");
+  if (!matricula) errores.push("v-matricula");
+
+  const emailValido = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  marcarError("v-email", "err-email", emailValido ? "" : "Revisá el email: ahí te mandamos el punto de encuentro.");
+  if (!emailValido) errores.push("v-email");
+
+  marcarError("v-provincia", "err-provincia", provincia ? "" : "Elegí la provincia donde podés participar.");
+  if (!provincia) errores.push("v-provincia");
+
+  document.getElementById("err-fechas").textContent = fechas.length ? "" : "Marcá al menos una fecha de campaña.";
+  if (!fechas.length) errores.push("fechas-grid");
+
+  document.getElementById("err-tareas").textContent = tareas.length ? "" : "Marcá al menos una tarea.";
+  if (!tareas.length) errores.push("tareas-grid");
+
+  marcarError("v-consent", "err-consent", consent ? "" : "Falta autorizar el uso de tus datos para coordinar la jornada.");
+  if (!consent) errores.push("v-consent");
+
+  if (errores.length) {
+    status.hidden = false;
+    status.textContent = `Faltan ${errores.length} ${errores.length === 1 ? "dato" : "datos"} para enviar la inscripción. Están marcados abajo.`;
+    const primero = document.getElementById(errores[0]);
+    if (primero) {
+      primero.scrollIntoView({ block: "center" });
+      if (primero.focus) primero.focus();
+    }
+    return;
+  }
+
+  status.hidden = true;
+  status.textContent = "";
+
+  const datos = {
+    nombre,
+    matricula,
+    especialidad: form.especialidad.value,
+    provincia,
+    email,
+    telefono: form.telefono.value.trim(),
+    turno: form.turno.value,
+    personas: form.personas.value,
+    notas: form.notas.value.trim(),
+    fechas,
+    tareas
+  };
+
+  // Acá va el POST al backend. Por ahora mostramos la confirmación en pantalla.
+  console.log("Inscripción de voluntariado:", datos);
+  mostrarConfirmacion(datos);
+}
+
+function mostrarConfirmacion(datos) {
+  const panel = document.getElementById("panel-voluntariado");
+  const layout = panel.querySelector(".volunteer-layout");
+
+  const card = document.createElement("div");
+  card.className = "success-card";
+  card.setAttribute("role", "status");
+  card.tabIndex = -1;
+  card.innerHTML = `
+    <h3>Inscripción enviada</h3>
+    <p>Gracias, ${datos.nombre}. Te vamos a escribir a <strong>${datos.email}</strong> hasta cinco días antes de cada jornada, con la sede y los materiales.</p>
+    <ul class="success-list">
+      <li><strong>Matrícula:</strong> ${datos.matricula} · ${datos.especialidad}</li>
+      <li><strong>Provincia:</strong> ${datos.provincia} · Turno ${datos.turno.toLowerCase()}</li>
+      <li><strong>Fechas:</strong> ${datos.fechas.join("; ")}</li>
+      <li><strong>Tareas:</strong> ${datos.tareas.join("; ")}</li>
+    </ul>
+    <button type="button" class="btn" id="otra-inscripcion">Cargar otra inscripción</button>
+  `;
+
+  layout.hidden = true;
+  layout.insertAdjacentElement("afterend", card);
+  card.focus();
+
+  card.querySelector("#otra-inscripcion").addEventListener("click", () => {
+    const form = document.getElementById("volunteer-form");
+    form.reset();
+    form.querySelectorAll('[aria-invalid="true"]').forEach(el => el.setAttribute("aria-invalid", "false"));
+    form.querySelectorAll(".error").forEach(el => (el.textContent = ""));
+    card.remove();
+    layout.hidden = false;
+    document.getElementById("v-nombre").focus();
   });
 }
 </script>
