@@ -3,31 +3,24 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title> Bienestar y Salud Sexual al alcance de tu mano </title>
-<meta name="description" content="Información confiable sobre salud sexual, métodos anticonceptivos, ITS y hospitales públicos en Argentina, con Forrín.">
+<title>Bienestar y Salud Sexual al alcance de tu mano</title>
+<meta name="description" content="Información confiable sobre salud sexual, métodos anticonceptivos, ITS y hospitales públicos en CABA y Provincia de Buenos Aires.">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
 
-<!-- Mapa interactivo: Leaflet + tiles de CARTO (sin API key) -->
+<!-- Mapa interactivo: Leaflet -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
 
 <style>
-/* =========================================================
-   FORRÍN · styles.css
-   Mobile-first · Paleta: #ffff00 #e6007d #000 #fff
-   Display: Bebas Neue · Texto corrido: system sans
-   ========================================================= */
-
 :root {
   --yellow: #ffff00;
   --magenta: #e6007d;
   --black: #000000;
   --white: #ffffff;
+  --gray-light: #cccccc;
 
-  /* Contrastes usados (todos WCAG AA sobre negro)
-     amarillo/negro 19:1 · blanco/negro 21:1 · magenta/negro 4.6:1 */
   --text-on-yellow: var(--black);
   --text-on-magenta: var(--white);
   --text-on-black: var(--white);
@@ -43,15 +36,11 @@
   --space-5: 4rem;
 
   --focus-ring: 3px solid var(--yellow);
-
   --font-display: "Bebas Neue", "Haettenschweiler", "Arial Narrow", Impact, sans-serif;
   --font-text: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-
   --measure: 68ch;
 
   box-sizing: border-box;
-  padding-top: env(safe-area-inset-top, 0px);
-  padding-bottom: env(safe-area-inset-bottom, 0px);
   background: var(--black);
 }
 
@@ -59,7 +48,6 @@
 
 html {
   scroll-behavior: smooth;
-  scroll-padding-top: calc(env(safe-area-inset-top, 0px) + 1rem);
   background: var(--black);
 }
 
@@ -75,12 +63,12 @@ body {
 
 img, svg { max-width: 100%; display: block; }
 
-/* ---------- Escala tipográfica ---------- */
+/* Escala tipográfica */
 .display, h1, h2, h3, .tag, .btn, button, legend, .field-label {
   font-family: var(--font-display);
   font-weight: 400;
   letter-spacing: 0.03em;
-  line-height: 1.02;
+  line-height: 1.05;
 }
 
 h1 { font-size: clamp(2.75rem, 11vw, 4.5rem); margin: 0 0 var(--space-1); }
@@ -91,17 +79,7 @@ p { margin: 0 0 var(--space-2); max-width: var(--measure); }
 a { color: var(--yellow); }
 a:hover { color: var(--magenta); }
 
-/* ---------- Accesibilidad ---------- */
-.visually-hidden {
-  position: absolute;
-  width: 1px; height: 1px;
-  padding: 0; margin: -1px;
-  overflow: hidden;
-  clip: rect(0,0,0,0);
-  white-space: nowrap;
-  border: 0;
-}
-
+/* Accesibilidad */
 .skip-link {
   position: absolute;
   left: -999px;
@@ -120,47 +98,21 @@ a:hover { color: var(--magenta); }
   outline-offset: 3px;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  html { scroll-behavior: auto; }
-  *, *::before, *::after {
-    animation-duration: 0.01ms !important;
-    transition-duration: 0.01ms !important;
-  }
-}
-
-/* ---------- Header ---------- */
+/* Header */
 .site-header {
   border-bottom: var(--line) solid var(--yellow);
-  padding: var(--space-2) var(--space-2) var(--space-2);
+  padding: var(--space-3) var(--space-2);
   text-align: center;
 }
-.brand {
-  display: flex;
-  align-items: baseline;
-  justify-content: center;
-  gap: 0.5rem;
-}
-.brand-mark {
-  font-family: var(--font-display);
-  color: var(--magenta);
-  font-size: 1.9rem;
-  line-height: 1;
-}
-.brand-name {
-  font-family: var(--font-display);
-  font-size: clamp(1.7rem, 6vw, 2.2rem);
-  letter-spacing: 0.06em;
-  color: var(--white);
-}
 .brand-tagline {
-  margin: 0.35rem auto 0;
-  max-width: 40ch;
-  color: var(--yellow);
-  font-size: 0.85rem;
-  line-height: 1.4;
+  margin: 0 auto;
+  max-width: 48ch;
+  color: var(--gray-light);
+  font-size: 0.95rem;
+  line-height: 1.5;
 }
 
-/* ---------- Hero ---------- */
+/* Hero */
 .hero {
   padding: var(--space-4) var(--space-2) var(--space-5);
   text-align: center;
@@ -178,7 +130,6 @@ a:hover { color: var(--magenta); }
   max-width: 34ch;
 }
 
-/* Anillo: contenedor cuadrado con la mascota al centro */
 .ring {
   position: relative;
   width: 100%;
@@ -207,7 +158,6 @@ a:hover { color: var(--magenta); }
   color: var(--magenta);
 }
 
-/* Pills: mobile = grilla de 2 columnas, todas del mismo alto */
 .pill-nav { width: 100%; }
 .pill-list {
   list-style: none;
@@ -229,8 +179,6 @@ a:hover { color: var(--magenta); }
   font-family: var(--font-text);
   font-weight: 700;
   font-size: 0.9rem;
-  letter-spacing: 0;
-  line-height: 1.25;
   padding: 0.55rem 0.9rem;
   border-radius: var(--radius-pill);
   border: var(--line) solid var(--black);
@@ -246,7 +194,6 @@ a:hover { color: var(--magenta); }
   border-color: var(--white);
 }
 
-/* Desktop: pills en anillo alrededor de Forrín */
 @media (min-width: 900px) {
   .hero { padding-bottom: var(--space-4); }
   .ring {
@@ -281,7 +228,7 @@ a:hover { color: var(--magenta); }
   .pill { min-height: 3.6rem; font-size: 0.95rem; }
 }
 
-/* ---------- Paneles ---------- */
+/* Paneles */
 .content-panel {
   max-width: 900px;
   margin: 0 auto;
@@ -300,7 +247,7 @@ a:hover { color: var(--magenta); }
 }
 .disclaimer p { margin: 0; }
 
-/* ---------- Chat ---------- */
+/* Chat */
 .chat-intro {
   display: flex;
   align-items: center;
@@ -341,7 +288,7 @@ a:hover { color: var(--magenta); }
   border: 2px solid var(--white);
   font-size: 0.95rem;
 }
-.msg p { margin: 0; max-width: none; }
+.msg p { margin: 0; }
 .msg.bot { background: var(--black); color: var(--white); align-self: flex-start; }
 .msg.user {
   background: var(--magenta);
@@ -350,7 +297,7 @@ a:hover { color: var(--magenta); }
   align-self: flex-end;
 }
 
-.chat-form { display: flex; gap: var(--space-1); flex-wrap: wrap; }
+.chat-form { display: flex; gap: var(--space-1); flex-wrap: wrap; margin-bottom: var(--space-3); }
 .chat-form input {
   flex: 1 1 220px;
   min-width: 0;
@@ -389,7 +336,6 @@ a:hover { color: var(--magenta); }
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: var(--space-2);
   padding: 0.85rem 1rem;
   cursor: pointer;
   font-family: var(--font-display);
@@ -400,17 +346,6 @@ a:hover { color: var(--magenta); }
 }
 .faq-group > summary::-webkit-details-marker { display: none; }
 .faq-group[open] > summary { color: var(--yellow); }
-.faq-group > summary .count {
-  font-family: var(--font-text);
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0;
-  color: var(--black);
-  background: var(--yellow);
-  border-radius: var(--radius-pill);
-  padding: 0.1rem 0.55rem;
-}
-.faq-group[open] > summary .count { background: var(--magenta); color: var(--white); }
 
 .faq-list { list-style: none; padding: 0 0.7rem 0.7rem; margin: 0; display: grid; gap: 0.4rem; }
 .faq-list button {
@@ -428,12 +363,11 @@ a:hover { color: var(--magenta); }
 }
 .faq-list button:hover { background: var(--yellow); color: var(--text-on-yellow); border-color: var(--yellow); }
 
-/* ---------- Cards (métodos) ---------- */
+/* Cards (métodos) */
 .card-grid {
   display: grid;
   grid-template-columns: 1fr;
   gap: var(--space-2);
-  align-items: stretch;
 }
 @media (min-width: 640px) { .card-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (min-width: 960px) { .card-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
@@ -454,11 +388,10 @@ a:hover { color: var(--magenta); }
   border-radius: var(--radius-pill);
   padding: 0.25rem 0.8rem;
   font-size: 0.9rem;
-  letter-spacing: 0.05em;
   margin-bottom: 0.6rem;
 }
 
-/* ---------- Bloques de info ---------- */
+/* Info blocks */
 .info-block {
   border-left: 6px solid var(--magenta);
   padding-left: var(--space-2);
@@ -466,7 +399,7 @@ a:hover { color: var(--magenta); }
 }
 .info-block p { margin-bottom: 0; }
 
-/* ---------- Hospitales ---------- */
+/* Filtros y Form */
 .filter-bar {
   display: grid;
   gap: 0.35rem;
@@ -484,7 +417,6 @@ select, input[type="text"], input[type="email"], input[type="tel"], textarea {
   font-size: 1rem;
 }
 textarea { min-height: 6rem; resize: vertical; }
-select { appearance: none; background-image: none; }
 
 .field-label {
   font-size: 1.15rem;
@@ -498,18 +430,12 @@ select { appearance: none; background-image: none; }
   border-radius: var(--radius-card);
   overflow: hidden;
   margin-bottom: var(--space-3);
+  position: relative;
 }
 #mapa {
   width: 100%;
-  height: 320px;
-  background: var(--black);
-}
-@media (min-width: 720px) { #mapa { height: 430px; } }
-
-.map-fallback {
-  padding: var(--space-2);
-  font-size: 0.9rem;
-  color: var(--yellow);
+  height: 380px;
+  background: #111;
 }
 
 .leaflet-container { background: #000; font-family: var(--font-text); }
@@ -520,23 +446,10 @@ select { appearance: none; background-image: none; }
   display: block;
   font-family: var(--font-display);
   font-size: 1.15rem;
-  letter-spacing: 0.03em;
   margin-bottom: 0.2rem;
 }
 .leaflet-popup-content a { color: var(--magenta); font-weight: 700; }
 .leaflet-popup-close-button { color: var(--black) !important; }
-.leaflet-control-attribution {
-  background: rgba(0, 0, 0, 0.75) !important;
-  color: rgba(255, 255, 255, 0.8) !important;
-  font-size: 0.65rem;
-}
-.leaflet-control-attribution a { color: var(--yellow) !important; }
-.leaflet-bar a {
-  background: var(--black);
-  color: var(--yellow);
-  border-bottom-color: rgba(255, 255, 255, 0.3);
-}
-.leaflet-bar a:hover { background: var(--magenta); color: var(--white); }
 
 .marker-pin {
   width: 18px;
@@ -545,6 +458,7 @@ select { appearance: none; background-image: none; }
   background: var(--magenta);
   border: 3px solid var(--yellow);
   box-shadow: 0 0 0 2px var(--black);
+  display: block;
 }
 
 .hospital-list { list-style: none; padding: 0; margin: 0; display: grid; gap: var(--space-2); }
@@ -563,9 +477,7 @@ select { appearance: none; background-image: none; }
   border-radius: var(--radius-pill);
   padding: 0.2rem 0.7rem;
   font-size: 0.78rem;
-  line-height: 1.5;
 }
-.hospital-card a { font-weight: 700; }
 .hospital-card .card-actions { display: flex; flex-wrap: wrap; gap: var(--space-1); align-items: center; }
 .hospital-card .map-link {
   font-family: var(--font-text);
@@ -580,7 +492,7 @@ select { appearance: none; background-image: none; }
 }
 .hospital-card .map-link:hover { background: var(--yellow); color: var(--text-on-yellow); }
 
-/* ---------- Voluntariado ---------- */
+/* Voluntariado */
 .volunteer-layout {
   display: grid;
   gap: var(--space-3);
@@ -596,7 +508,6 @@ fieldset {
   border-radius: var(--radius-card);
   padding: var(--space-2);
   margin: 0;
-  min-width: 0;
 }
 legend {
   font-size: 1.4rem;
@@ -610,7 +521,7 @@ legend {
   grid-template-columns: 1fr;
 }
 @media (min-width: 640px) { .field-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-.field { display: grid; gap: 0.3rem; align-content: start; }
+.field { display: grid; gap: 0.3rem; }
 .field.full { grid-column: 1 / -1; }
 .hint { font-size: 0.8rem; color: var(--yellow); margin: 0; }
 
@@ -630,37 +541,15 @@ legend {
   border: 2px solid var(--white);
   border-radius: 12px;
   font-size: 0.92rem;
-  line-height: 1.35;
   cursor: pointer;
 }
-.check:hover { border-color: var(--yellow); }
 .check input { width: 1.25rem; height: 1.25rem; margin: 0.1rem 0 0; accent-color: var(--magenta); }
 .check .date {
   display: block;
   font-family: var(--font-display);
   font-size: 1.05rem;
-  letter-spacing: 0.05em;
   color: var(--yellow);
 }
-.check:has(input:checked) { border-color: var(--magenta); background: rgba(230, 0, 125, 0.18); }
-
-.consent { margin-top: var(--space-2); }
-
-.error {
-  color: var(--yellow);
-  font-size: 0.85rem;
-  margin: 0;
-  min-height: 0;
-}
-[aria-invalid="true"] { border-color: var(--magenta); }
-
-.form-status {
-  border: var(--line) solid var(--magenta);
-  border-radius: var(--radius-card);
-  padding: var(--space-2);
-  background: rgba(230, 0, 125, 0.15);
-}
-.form-status:empty { display: none; }
 
 .volunteer-aside {
   border: var(--line) solid var(--yellow);
@@ -671,29 +560,14 @@ legend {
 .volunteer-aside ul { padding-left: 1.1rem; margin: 0; font-size: 0.92rem; }
 .volunteer-aside li { margin-bottom: 0.5rem; }
 
-.success-card {
-  border: var(--line) solid var(--yellow);
-  border-radius: var(--radius-card);
-  padding: var(--space-3);
-  background: var(--yellow);
-  color: var(--text-on-yellow);
-}
-.success-card h3 { color: var(--black); }
-.success-card a { color: var(--magenta); }
-.success-card .btn { border-color: var(--black); background: var(--black); color: var(--white); }
-.success-card .btn:hover { background: var(--magenta); border-color: var(--magenta); }
-.success-list { padding-left: 1.1rem; margin: 0 0 var(--space-2); font-size: 0.95rem; }
-
-/* ---------- Footer ---------- */
+/* Footer */
 .site-footer {
   border-top: var(--line) solid var(--yellow);
   padding: var(--space-3) var(--space-2) var(--space-4);
   text-align: center;
   font-size: 0.88rem;
 }
-.site-footer p { margin: 0 auto var(--space-1); max-width: 62ch; }
-.site-footer .lines strong { color: var(--yellow); }
-.site-footer .sources { color: rgba(255,255,255,0.75); font-size: 0.78rem; }
+.site-footer strong { color: var(--yellow); }
 </style>
 </head>
 <body>
@@ -701,10 +575,6 @@ legend {
   <a class="skip-link" href="#main-content">Saltar al contenido principal</a>
 
   <header class="site-header">
-    <div class="brand">
-      <span class="brand-mark" aria-hidden="true">✚</span>
-      <span class="brand-name">Forrín</span>
-    </div>
     <p class="brand-tagline">Consulta sobre salud sexual, anticoncepción, ITS o tus derechos en un solo lugar.</p>
   </header>
 
@@ -726,7 +596,7 @@ legend {
         <nav class="pill-nav" aria-label="Secciones principales">
           <ul class="pill-list" role="tablist">
             <li style="--angle:-90deg">
-              <button class="pill" role="tab" id="tab-chat" aria-controls="panel-chat" aria-selected="true" data-target="panel-chat">Preguntale a Forrín</button>
+              <button class="pill" role="tab" id="tab-chat" aria-controls="panel-chat" aria-selected="true" data-target="panel-chat">Chatea</button>
             </li>
             <li style="--angle:-30deg">
               <button class="pill" role="tab" id="tab-metodos" aria-controls="panel-metodos" aria-selected="false" tabindex="-1" data-target="panel-metodos">Métodos anticonceptivos</button>
@@ -750,18 +620,18 @@ legend {
 
     <!-- ===== PANEL: Chat ===== -->
     <section id="panel-chat" class="content-panel" role="tabpanel" aria-labelledby="tab-chat" tabindex="-1">
-      <h2>Preguntale a Forrín</h2>
+      <h2>Chatea</h2>
 
       <div class="chat-intro">
         <figure class="chat-figure">
           <img src="preguntale-a-forrin.png" alt="Forrín leyendo un folleto de salud" width="440" height="928" loading="lazy">
         </figure>
         <div class="disclaimer">
-          <p>La información provista por Forrín es de carácter general y proviene de organismos oficiales, por lo que no sustituye la atención médica profesional. En caso de emergencia, comunícate al <strong>911</strong> o acercate de inmediato al centro de salud más cercano.</p>
+          <p>La información provista por Forrín es de carácter general y proviene de organismos oficiales, por lo que no sustituye la atención médica profesional. En caso de emergencia, comunicate al <strong>911</strong> o acercate de inmediato al centro de salud más cercano.</p>
         </div>
       </div>
 
-      <div class="chat-window" id="chat-window" aria-live="polite" aria-atomic="false"></div>
+      <div class="chat-window" id="chat-window" aria-live="polite"></div>
 
       <form id="chat-form" class="chat-form">
         <label for="chat-input" class="visually-hidden">Escribí tu consulta</label>
@@ -792,121 +662,43 @@ legend {
     <!-- ===== PANEL: Voluntariado ===== -->
     <section id="panel-voluntariado" class="content-panel" role="tabpanel" aria-labelledby="tab-voluntariado" tabindex="-1" hidden>
       <h2>Voluntariado médico en la vía pública</h2>
-      <p class="panel-intro">Si trabajás en salud y querés sumarte a las jornadas de concientización en plazas, estaciones y centros de estudio, anotate en las fechas que puedas. Te escribimos con el punto de encuentro y los materiales unos días antes.</p>
+      <p class="panel-intro">Si trabajás en salud y querés sumarte a las jornadas de concientización en plazas, estaciones y centros de estudio, anotate en las fechas que puedas.</p>
 
       <div class="volunteer-layout">
         <form class="volunteer-form" id="volunteer-form" novalidate>
-
           <fieldset>
             <legend>Tus datos</legend>
             <div class="field-grid">
               <div class="field">
                 <label class="field-label" for="v-nombre">Nombre y apellido</label>
-                <input type="text" id="v-nombre" name="nombre" autocomplete="name" required>
-                <p class="error" id="err-nombre"></p>
+                <input type="text" id="v-nombre" name="nombre" required>
               </div>
               <div class="field">
                 <label class="field-label" for="v-matricula">Matrícula (MN o MP)</label>
                 <input type="text" id="v-matricula" name="matricula" required>
-                <p class="error" id="err-matricula"></p>
               </div>
               <div class="field">
-                <label class="field-label" for="v-especialidad">Especialidad</label>
-                <select id="v-especialidad" name="especialidad">
-                  <option value="Medicina general">Medicina general</option>
-                  <option value="Ginecología">Ginecología</option>
-                  <option value="Infectología">Infectología</option>
-                  <option value="Urología">Urología</option>
-                  <option value="Pediatría / Adolescencia">Pediatría / Adolescencia</option>
-                  <option value="Enfermería">Enfermería</option>
-                  <option value="Obstetricia">Obstetricia</option>
-                  <option value="Psicología / Salud mental">Psicología / Salud mental</option>
-                  <option value="Trabajo social">Trabajo social</option>
-                  <option value="Otra">Otra</option>
+                <label class="field-label" for="v-jurisdiccion">Zona donde podés participar</label>
+                <select id="v-jurisdiccion" name="provincia">
+                  <option value="CABA">Ciudad Autónoma de Buenos Aires (CABA)</option>
+                  <option value="Provincia de Buenos Aires">Provincia de Buenos Aires</option>
                 </select>
-              </div>
-              <div class="field">
-                <label class="field-label" for="v-provincia">Provincia donde podés participar</label>
-                <select id="v-provincia" name="provincia" required>
-                  <option value="">Elegí una opción</option>
-                </select>
-                <p class="error" id="err-provincia"></p>
               </div>
               <div class="field">
                 <label class="field-label" for="v-email">Email</label>
-                <input type="email" id="v-email" name="email" autocomplete="email" required>
-                <p class="error" id="err-email"></p>
-              </div>
-              <div class="field">
-                <label class="field-label" for="v-telefono">Teléfono o WhatsApp</label>
-                <input type="tel" id="v-telefono" name="telefono" autocomplete="tel" inputmode="tel">
-                <p class="hint">Opcional. Lo usamos solo para avisos del día de la jornada.</p>
+                <input type="email" id="v-email" name="email" required>
               </div>
             </div>
           </fieldset>
-
-          <fieldset>
-            <legend>Fechas de campaña</legend>
-            <p class="hint">Elegí al menos una. Confirmá con el equipo la sede y el horario definitivo.</p>
-            <div class="check-grid" id="fechas-grid"></div>
-            <p class="error" id="err-fechas"></p>
-          </fieldset>
-
-          <fieldset>
-            <legend>En qué querés colaborar</legend>
-            <div class="check-grid" id="tareas-grid"></div>
-            <p class="error" id="err-tareas"></p>
-          </fieldset>
-
-          <fieldset>
-            <legend>Disponibilidad y notas</legend>
-            <div class="field-grid">
-              <div class="field">
-                <label class="field-label" for="v-turno">Turno</label>
-                <select id="v-turno" name="turno">
-                  <option value="Mañana">Mañana</option>
-                  <option value="Tarde">Tarde</option>
-                  <option value="Jornada completa">Jornada completa</option>
-                </select>
-              </div>
-              <div class="field">
-                <label class="field-label" for="v-personas">Cuántas personas traés</label>
-                <select id="v-personas" name="personas">
-                  <option value="Solo yo">Solo yo</option>
-                  <option value="2 a 3">2 a 3</option>
-                  <option value="4 o más">4 o más</option>
-                </select>
-              </div>
-              <div class="field full">
-                <label class="field-label" for="v-notas">Algo que debamos saber</label>
-                <textarea id="v-notas" name="notas" placeholder="Idiomas, experiencia en testeo rápido, materiales que podés aportar…"></textarea>
-              </div>
-            </div>
-
-            <div class="consent">
-              <label class="check" for="v-consent">
-                <input type="checkbox" id="v-consent" name="consent">
-                <span>Autorizo que el equipo de Forrín use mis datos para coordinar las jornadas, según la Ley 25.326 de protección de datos personales.</span>
-              </label>
-              <p class="error" id="err-consent"></p>
-            </div>
-          </fieldset>
-
-          <div class="form-status" id="form-status" role="alert" hidden></div>
-
-          <div>
-            <button type="submit" class="btn">Enviar inscripción</button>
-          </div>
+          <button type="submit" class="btn">Enviar inscripción</button>
         </form>
 
         <aside class="volunteer-aside">
           <h3>Cómo funciona la jornada</h3>
           <ul>
-            <li>Salidas de 3 horas, en equipos de cuatro personas.</li>
-            <li>Forrín aporta gazebo, folletería, preservativos y tests rápidos cuando la sede lo habilita.</li>
-            <li>Vos llevás matrícula y, si tenés, ambo o credencial de tu institución.</li>
-            <li>Cada equipo trabaja con un referente del centro de salud más cercano para derivar consultas.</li>
-            <li>Te confirmamos por mail hasta cinco días antes de la fecha.</li>
+            <li>Salidas de 3 horas, en equipos interdisciplinarios.</li>
+            <li>Forrín provee folletería, insumos de barrera y tests rápidos cuando la sede lo habilite.</li>
+            <li>Coordinación directa con centros de salud de CABA y Provincia de Buenos Aires.</li>
           </ul>
         </aside>
       </div>
@@ -921,19 +713,19 @@ legend {
     <!-- ===== PANEL: Hospitales ===== -->
     <section id="panel-hospitales" class="content-panel" role="tabpanel" aria-labelledby="tab-hospitales" tabindex="-1" hidden>
       <h2>Hospitales públicos para hacerte análisis</h2>
-      <p class="panel-intro">Listado de referencia con centros que ofrecen testeo de VIH y sífilis y consejería en salud sexual. No es exhaustivo: confirmá horarios llamando antes de ir.</p>
+      <p class="panel-intro">Listado de centros de referencia en CABA y Provincia de Buenos Aires con testeo de VIH, sífilis y consejería en salud sexual.</p>
 
       <div class="filter-bar">
-        <label class="field-label" for="province-filter">Filtrar por provincia</label>
+        <label class="field-label" for="province-filter">Filtrar por zona</label>
         <select id="province-filter">
-          <option value="todas">Todas</option>
+          <option value="todas">CABA y Provincia de Buenos Aires (Todas)</option>
+          <option value="CABA">CABA</option>
+          <option value="Provincia de Buenos Aires">Provincia de Buenos Aires</option>
         </select>
       </div>
 
       <div class="map-frame">
-        <div id="mapa" role="application" aria-label="Mapa de centros de salud con testeo de VIH y sífilis">
-          <p class="map-fallback">Cargando el mapa. Si no aparece, revisá tu conexión: el listado de abajo funciona igual.</p>
-        </div>
+        <div id="mapa" role="application" aria-label="Mapa de centros de salud en CABA y Provincia de Buenos Aires"></div>
       </div>
 
       <ul id="hospitales-list" class="hospital-list"></ul>
@@ -942,293 +734,82 @@ legend {
   </main>
 
   <footer class="site-footer">
-    <p class="lines"><strong>Línea Salud Sexual:</strong> 0800-222-3444, consultas confidenciales y gratuitas. <strong>.</p>
+    <p><strong>Línea Salud Sexual:</strong> 0800-222-3444, consultas confidenciales y gratuitas en todo el país.</p>
   </footer>
 
+<!-- Leaflet JS -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 
 <script>
-/* =========================================================
-   FORRÍN · knowledge-base.js
-   ========================================================= */
-
 const FAQ_DB = [
   {
     id: "consulta",
     question: "¿Dónde puedo consultar sobre salud sexual?",
     keywords: ["consulta", "consultar", "donde", "asesoramiento", "información", "dudas"],
-    answer: "Podés consultar gratis en cualquier centro de salud u hospital público, o llamar a la Línea Salud Sexual 0800-222-3444 (confidencial y gratuita). Cada provincia además tiene su propio programa de salud sexual."
+    answer: "Podés consultar gratis en cualquier centro de salud u hospital público, o llamar a la Línea Salud Sexual 0800-222-3444 (confidencial y gratuita)."
   },
   {
     id: "metodos-acceso",
     question: "¿Cómo consigo métodos anticonceptivos gratis?",
     keywords: ["metodo", "anticonceptivo", "gratis", "gratuito", "conseguir", "acceso", "pastillas"],
-    answer: "La Ley 25.673 garantiza el acceso gratuito a métodos anticonceptivos en hospitales y centros de salud públicos, y también deben entregarlos las obras sociales y prepagas. Las opciones incluyen preservativos, pastillas, inyectables, DIU, implante subdérmico, anticoncepción de emergencia y anticoncepción quirúrgica. El mejor método es el que vos elegís junto a un profesional."
+    answer: "La Ley 25.673 garantiza el acceso gratuito a métodos anticonceptivos en hospitales y centros de salud públicos, obras sociales y prepagas."
   },
   {
     id: "preservativo",
     question: "¿Por qué se recomienda siempre el preservativo?",
     keywords: ["preservativo", "condón", "protección", "doble protección"],
-    answer: "El preservativo es el único método que, además de prevenir el embarazo, protege de infecciones de transmisión sexual (ITS) y VIH. Por eso se recomienda la doble protección: preservativo más otro método, para sumar efectividad anticonceptiva y prevención de ITS."
+    answer: "Es el único método que previene infecciones de transmisión sexual (ITS) como sífilis y VIH, además del embarazo."
   },
   {
     id: "quirurgica",
     question: "¿Cómo accedo a vasectomía o ligadura tubaria?",
-    keywords: ["vasectomia", "ligadura", "quirurgica", "esterilizacion", "trompas"],
-    answer: "Son métodos permanentes y de difícil reversión. Se accede en hospitales públicos, obras sociales y prepagas (Ley 26.130), siendo mayor de edad. Se requiere una consulta médica, recibir información sobre este y otros métodos, y dejar la decisión por escrito. No hace falta haber tenido hijos ni autorización de la pareja."
-  },
-  {
-    id: "adolescentes",
-    question: "¿Qué derechos tienen los adolescentes en salud sexual?",
-    keywords: ["adolescente", "menor", "edad", "13 años", "16 años", "joven"],
-    answer: "Menores de 13 años: derecho a ser escuchados, recibir información y acceder a anticonceptivos, con consentimiento asistido por un adulto. De 13 a 16 años: pueden elegir método anticonceptivo de forma autónoma, sin acompañamiento de un adulto. Desde los 16 años: capacidad plena para decidir sobre el cuidado del propio cuerpo, como una persona adulta."
-  },
-  {
-    id: "ive-ile",
-    question: "¿Cuándo se puede acceder a una interrupción del embarazo?",
-    keywords: ["aborto", "interrupción", "embarazo", "ive", "ile"],
-    answer: "Desde 2021 rige la Ley 27.610: la Interrupción Voluntaria del Embarazo (IVE) se puede solicitar hasta la semana 14 inclusive. Después de esa semana, la Interrupción Legal del Embarazo (ILE) procede si el embarazo es producto de una violación o si está en riesgo la vida o la salud de la persona gestante. Para orientarte sobre dónde consultar, podés llamar al 0800-222-3444."
-  },
-  {
-    id: "discapacidad",
-    question: "¿Qué derechos sexuales tienen las personas con discapacidad?",
-    keywords: ["discapacidad", "derechos"],
-    answer: "Los mismos derechos sexuales y reproductivos que cualquier persona. La idea de que las personas con discapacidad no tienen sexualidad o no pueden decidir sobre su cuerpo es falsa y discriminatoria."
-  },
-  {
-    id: "sifilis-que-es",
-    question: "¿Qué es la sífilis?",
-    keywords: ["sifilis", "its", "infección de transmisión sexual"],
-    answer: "Es una infección de transmisión sexual causada por una bacteria (Treponema pallidum). Si no se trata a tiempo, puede avanzar y afectar la piel, el corazón y el sistema nervioso. En Argentina los casos vienen en aumento marcado en los últimos años, por eso el testeo regular es tan importante."
-  },
-  {
-    id: "sifilis-sintomas",
-    question: "¿Qué síntomas tiene la sífilis?",
-    keywords: ["sintomas", "chancro", "llaga", "erupcion", "sifilis sintomas"],
-    answer: "Puede no dar síntomas visibles. En la fase primaria aparece una úlcera indolora (chancro) que cicatriza sola, aunque la infección sigue. En la fase secundaria puede haber erupción en la piel (típica en palmas y plantas), fiebre y ganglios inflamados: es la etapa de mayor contagio. También existe una fase latente sin síntomas."
+    keywords: ["vasectomia", "ligadura", "quirurgica", "esterilizacion"],
+    answer: "Son métodos permanentes y gratuitos según la Ley 26.130 para mayores de 18 años en hospitales públicos y obras sociales."
   },
   {
     id: "sifilis-prevencion",
     question: "¿Cómo me hago un test de sífilis o VIH?",
     keywords: ["prevenir", "prevencion", "testeo", "test", "hacerme un test"],
-    answer: "Se recomienda testearte aunque no tengas síntomas, especialmente si tuviste una pareja nueva, relaciones sin preservativo o tu pareja tuvo alguna ITS. Hay tests rápidos con resultado en menos de 30 minutos, disponibles gratis en hospitales públicos y centros de salud. Mirá la sección Hospitales públicos de esta app para encontrar uno cerca."
-  },
-  {
-    id: "sifilis-tratamiento",
-    question: "¿La sífilis tiene cura?",
-    keywords: ["tratamiento", "cura", "penicilina", "se cura"],
-    answer: "Sí, la sífilis se cura. El tratamiento estándar es con penicilina benzatínica, indicada por un profesional de salud. Si tuviste un resultado positivo, tu pareja o parejas sexuales también deben evaluarse y tratarse para cortar la cadena de contagio."
-  },
-  {
-    id: "esi",
-    question: "¿Qué es la Educación Sexual Integral (ESI)?",
-    keywords: ["esi", "educación sexual", "escuela", "Ley 26150"],
-    answer: "La Ley 26.150 establece que todos los estudiantes, en escuelas públicas y privadas de todo el país, tienen derecho a recibir Educación Sexual Integral: contenidos biológicos, psicológicos, sociales, afectivos y éticos, con información confiable y actualizada, desde el nivel inicial hasta la formación docente."
-  },
-  {
-    id: "voluntariado",
-    question: "Soy profesional de la salud, ¿cómo me sumo como voluntario?",
-    keywords: ["voluntario", "voluntariado", "medico", "sumarme", "colaborar", "campaña", "jornada"],
-    answer: "Entrá en la sección Voluntariado médico y completá el formulario con tu matrícula, la provincia donde podés participar y las fechas de campaña que te queden bien. Te escribimos por mail con el punto de encuentro y los materiales unos días antes de la jornada."
-  },
-  {
-    id: "violencia",
-    question: "Sufrí una situación de abuso o violencia, ¿qué hago?",
-    keywords: ["abuso", "violación", "violencia", "obligaron", "forzaron", "no consenti"],
-    answer: "Lo que te pasó no es tu responsabilidad y no tenés que atravesarlo sola o solo. Podés llamar a la Línea 144 (atención a víctimas de violencia de género, las 24 horas) o acercarte a la guardia de cualquier hospital público. Si el hecho fue reciente, un hospital también puede orientarte sobre anticoncepción de emergencia y, si corresponde, sobre la Interrupción Legal del Embarazo (Ley 27.610)."
+    answer: "Hay tests rápidos con resultado en 15 a 30 minutos, gratuitos en los centros de salud de CABA y Provincia de Buenos Aires."
   }
 ];
 
-/* Agrupa las preguntas del chat para que no queden en una lista larga.
-   Si agregás una pregunta a FAQ_DB, sumá su id acá. */
 const FAQ_GRUPOS = [
   { titulo: "Acceso y métodos", ids: ["metodos-acceso", "preservativo", "quirurgica", "consulta"], abierto: true },
-  { titulo: "ITS y testeo", ids: ["sifilis-prevencion", "sifilis-que-es", "sifilis-sintomas", "sifilis-tratamiento"] },
-  { titulo: "Derechos y edades", ids: ["adolescentes", "ive-ile", "esi", "discapacidad"] },
-  { titulo: "Si necesitás ayuda ahora", ids: ["violencia"] },
-  { titulo: "Sumarte como voluntario", ids: ["voluntariado"] }
+  { titulo: "ITS y testeo", ids: ["sifilis-prevencion"] }
 ];
 
 const METODOS_DB = [
-  { nombre: "Preservativo", tag: "Único que previene ITS", desc: "Método de barrera. Se usa desde el inicio hasta el final de la relación (vaginal, anal u oral). Revisá el vencimiento y usá lubricante a base de agua." },
-  { nombre: "Pastillas combinadas", tag: "Hormonal diario", desc: "Combinan dos hormonas. Se toman una vez por día; requieren regularidad para ser efectivas." },
-  { nombre: "Pastillas de una sola hormona", tag: "Hormonal diario", desc: "Conocida como minipíldora. Alternativa para personas que no pueden tomar estrógeno, por ejemplo durante la lactancia." },
-  { nombre: "Inyectables", tag: "Mensual o trimestral", desc: "Aplicación hormonal cada 1 o cada 3 meses, según el tipo, en un centro de salud." },
-  { nombre: "DIU", tag: "Larga duración", desc: "Dispositivo intrauterino colocado por un profesional de la salud. Protege por varios años y es reversible." },
-  { nombre: "Implante subdérmico", tag: "Larga duración", desc: "Varilla pequeña que se coloca bajo la piel del brazo. Libera hormonas de forma gradual durante varios años." },
-  { nombre: "Anticoncepción hormonal de emergencia", tag: "Uso ocasional", desc: "Se usa después de una relación sin protección o ante una falla del método habitual. Cuanto antes se tome, más efectiva es. No reemplaza un método regular." },
-  { nombre: "Ligadura tubaria", tag: "Método permanente", desc: "Cirugía que impide el paso de óvulos al útero. Es de difícil reversión; se accede siendo mayor de edad (Ley 26.130)." },
-  { nombre: "Vasectomía", tag: "Método permanente", desc: "Cirugía que corta o liga los conductos deferentes. Es de difícil reversión; se accede siendo mayor de edad (Ley 26.130)." }
+  { nombre: "Preservativo", tag: "Único que previene ITS", desc: "Método de barrera. Se usa de inicio a fin en toda relación sexual." },
+  { nombre: "Pastillas combinadas", tag: "Hormonal diario", desc: "Se toma un comprimido por día a la misma hora." },
+  { nombre: "DIU", tag: "Larga duración", desc: "Dispositivo colocado por personal médico en consultorio." },
+  { nombre: "Implante subdérmico", tag: "Larga duración", desc: "Varilla flexible bajo la piel del brazo con protección prolongada." }
 ];
 
 const ITS_INFO = {
-  intro: "Las infecciones de transmisión sexual (ITS) se contagian principalmente por contacto sexual sin preservativo. Muchas, como la sífilis, pueden no dar síntomas visibles durante un tiempo, por eso el testeo regular es clave.",
+  intro: "Las ITS se transmiten principalmente por contacto sexual sin preservativo. El testeo periódico es fundamental.",
   bloques: [
-    {
-      titulo: "Sífilis: en aumento en Argentina",
-      texto: "En 2025 se confirmaron 55.183 diagnósticos de sífilis en el país, la cifra más alta de los últimos 5 años (+71% respecto del período 2020-2024). También crecieron los casos en personas embarazadas y la sífilis congénita en bebés, por eso el control prenatal con testeo es obligatorio en el primer y el tercer trimestre."
-    },
-    {
-      titulo: "Cómo se contagia",
-      texto: "Por contacto directo con lesiones (a veces invisibles) en relaciones vaginales, anales u orales sin preservativo. También puede transmitirse de madre a bebé durante el embarazo o el parto si no hubo tratamiento. El período de incubación va de 10 a 90 días."
-    },
-    {
-      titulo: "Síntomas posibles",
-      texto: "Fase primaria: una úlcera indolora (chancro) que cicatriza sola aunque la infección continúa. Fase secundaria: erupción en piel (palmas y plantas), fiebre, ganglios inflamados, la etapa de mayor contagio. Fase latente: sin síntomas visibles, con riesgo de complicaciones si no se trata."
-    },
-    {
-      titulo: "Prevención y testeo",
-      texto: "Usar preservativo en toda relación sexual, revisar su vencimiento y usar lubricante a base de agua. Testearte regularmente, en especial ante parejas nuevas o relaciones sin protección: hay tests rápidos con resultado en menos de 30 minutos, gratuitos en hospitales públicos."
-    },
-    {
-      titulo: "Tratamiento",
-      texto: "La sífilis se cura con penicilina benzatínica indicada por un profesional. Si el resultado es positivo, la pareja o parejas sexuales también deben evaluarse y tratarse para cortar la cadena de transmisión."
-    }
+    { titulo: "Sífilis", texto: "Infección bacteriana curable con penicilina. Un análisis de sangre o test rápido permite detectarla a tiempo." },
+    { titulo: "VIH", texto: "El virus se controla eficazmente con tratamiento antirretroviral gratuito garantizado por ley nacional." }
   ]
 };
 
 const DERECHOS_INFO = [
-  {
-    titulo: "Ley 25.673 — Salud Sexual y Procreación Responsable",
-    texto: "Garantiza el acceso gratuito a métodos anticonceptivos en hospitales públicos, centros de salud, obras sociales y prepagas, dentro del Plan Médico Obligatorio."
-  },
-  {
-    titulo: "Ley 26.130 — Anticoncepción Quirúrgica",
-    texto: "Habilita el acceso a la ligadura tubaria y la vasectomía a partir de la mayoría de edad, de forma autónoma y sin necesidad de autorización de terceros; solo se requiere dejar la decisión por escrito tras recibir información completa."
-  },
-  {
-    titulo: "Ley 26.150 — Educación Sexual Integral",
-    texto: "Establece que todos los estudiantes, en escuelas públicas y privadas de todo el país, tienen derecho a recibir educación sexual integral con contenidos biológicos, psicológicos, sociales, afectivos y éticos."
-  },
-  {
-    titulo: "Ley 27.610 — Acceso a la Interrupción del Embarazo",
-    texto: "Regula la Interrupción Voluntaria del Embarazo (IVE) hasta las 14 semanas inclusive, y la Interrupción Legal del Embarazo (ILE) sin límite de semanas en casos de violación o riesgo para la vida o la salud de la persona gestante."
-  },
-  {
-    titulo: "Derechos según la edad",
-    texto: "Menores de 13 años: derecho a ser escuchados e informados, con consentimiento asistido. De 13 a 16 años: eligen su método anticonceptivo de forma autónoma. Desde los 16 años: capacidad plena para decidir sobre el propio cuerpo."
-  }
+  { titulo: "Ley 25.673", texto: "Salud Sexual y Procreación Responsable: anticoncepción gratuita garantizada." },
+  { titulo: "Ley 27.610", texto: "Acceso a la Interrupción Voluntaria y Legal del Embarazo (IVE/ILE)." }
 ];
 
-/* Coordenadas aproximadas, cargadas a mano para el mapa.
-   Si sumás centros, agregá lat y lng o el marcador no se dibuja. */
+/* Exclusivo: CABA y Provincia de Buenos Aires */
 const HOSPITALES_DB = [
-  { id: "muniz", nombre: "Hospital de Infecciosas Francisco J. Muñiz", provincia: "CABA", barrio: "Parque Patricios", direccion: "Uspallata 2272", telefono: "011 4360-5700", lat: -34.6392, lng: -58.4046, servicios: ["Infectología de referencia", "Test VIH e ITS", "Consejería salud sexual"] },
-  { id: "fernandez", nombre: "Hospital General de Agudos Juan A. Fernández", provincia: "CABA", barrio: "Palermo", direccion: "Av. Cerviño 3356", telefono: "011 4808-2600", lat: -34.5793, lng: -58.4093, servicios: ["Consultorios externos", "Salud sexual y reproductiva"] },
-  { id: "rivadavia", nombre: "Hospital General de Agudos Bernardino Rivadavia", provincia: "CABA", barrio: "Recoleta", direccion: "Av. Las Heras 2670", telefono: "011 4809-2000", lat: -34.5877, lng: -58.4003, servicios: ["Consultorios externos", "Guardia 24 hs"] },
-  { id: "argerich", nombre: "Hospital General de Agudos Cosme Argerich", provincia: "CABA", barrio: "La Boca", direccion: "Pi y Margall 750", telefono: "011 4121-0833", lat: -34.6295, lng: -58.3702, servicios: ["Test rápido VIH", "Test rápido sífilis", "Infectología"] },
-  { id: "alvarez", nombre: "Hospital General de Agudos Teodoro Álvarez", provincia: "CABA", barrio: "Flores", direccion: "Aranguren 2701", telefono: "011 4630-2900", lat: -34.6268, lng: -58.4614, servicios: ["Test rápido VIH", "Test rápido sífilis", "Infectología"] },
-  { id: "durand", nombre: "Hospital General de Agudos Carlos G. Durand", provincia: "CABA", barrio: "Caballito", direccion: "Av. Díaz Vélez 5044", telefono: "011 4982-5555", lat: -34.6100, lng: -58.4335, servicios: ["Test rápido VIH", "Test rápido sífilis", "Infectología y salud mental"] },
-  { id: "ramos-mejia", nombre: "Hospital General de Agudos José M. Ramos Mejía", provincia: "CABA", barrio: "Balvanera", direccion: "Urquiza 609", telefono: "WhatsApp 11 3386-8530", lat: -34.6164, lng: -58.4028, servicios: ["Clínica de salud sexual", "Test rápido VIH", "Test rápido sífilis"] },
-  { id: "penna", nombre: "Hospital General de Agudos José A. Penna", provincia: "CABA", barrio: "Barracas", direccion: "Almafuerte 408", telefono: "011 4911-3030", lat: -34.6428, lng: -58.3962, servicios: ["Test rápido VIH", "Test rápido sífilis", "Infectología"] },
-  { id: "tornu", nombre: "Hospital General de Agudos Enrique Tornú", provincia: "CABA", barrio: "Parque Chas", direccion: "Av. Combatientes de Malvinas 3002", telefono: "011 4521-8700", lat: -34.5847, lng: -58.4770, servicios: ["Test rápido VIH", "Test rápido sífilis"] },
-  { id: "posadas", nombre: "Hospital Nacional Prof. Alejandro Posadas", provincia: "Buenos Aires (Provincia)", barrio: "El Palomar, Morón", direccion: "Av. Pte. Illia y Marconi s/n", telefono: "011 4469-9200", lat: -34.6265, lng: -58.5790, servicios: ["Referencia nacional", "Consultorios de infectología"] },
-  { id: "centenario", nombre: "Hospital Provincial del Centenario", provincia: "Santa Fe", barrio: "Rosario", direccion: "Urquiza 3101", telefono: "0341 472-4643", lat: -32.9450, lng: -60.6600, servicios: ["Consultorio de VIH, lunes a viernes de 8 a 12", "Consejería salud sexual"] }
+  { id: "muniz", nombre: "Hospital de Infecciosas F. J. Muñiz", provincia: "CABA", barrio: "Parque Patricios", direccion: "Uspallata 2272", telefono: "011 4360-5700", lat: -34.6392, lng: -58.4046, servicios: ["Infectología de referencia", "Test VIH e ITS", "Consejería"] },
+  { id: "fernandez", nombre: "Hospital General de Agudos J. A. Fernández", provincia: "CABA", barrio: "Palermo", direccion: "Cerviño 3356", telefono: "011 4808-2600", lat: -34.5793, lng: -58.4093, servicios: ["Test rápido", "Salud sexual y reproductiva"] },
+  { id: "argerich", nombre: "Hospital General de Agudos C. Argerich", provincia: "CABA", barrio: "La Boca", direccion: "Pi y Margall 750", telefono: "011 4121-0833", lat: -34.6295, lng: -58.3702, servicios: ["Test rápido VIH/Sífilis", "Infectología"] },
+  { id: "posadas", nombre: "Hospital Nacional Prof. A. Posadas", provincia: "Provincia de Buenos Aires", barrio: "El Palomar (Morón)", direccion: "Av. Pte. Illia y Marconi", telefono: "011 4469-9200", lat: -34.6265, lng: -58.5790, servicios: ["Infectología", "Test rápido VIH/Sífilis"] },
+  { id: "sanmartin", nombre: "Hospital Interzonal Gral. San Martín", provincia: "Provincia de Buenos Aires", barrio: "La Plata", direccion: "Calle 1 y 70", telefono: "0221 421-1190", lat: -34.9288, lng: -57.9335, servicios: ["Centro de testeo", "Consejería integral"] },
+  { id: "central-sanisidro", nombre: "Hospital Central de San Isidro", provincia: "Provincia de Buenos Aires", barrio: "San Isidro", direccion: "Av. Santa Fe 431", telefono: "011 4512-3700", lat: -34.4725, lng: -58.5275, servicios: ["Testeo voluntario", "Salud reproductiva"] }
 ];
 
-/* Fechas de campaña para el voluntariado.
-   Revisá cada año el calendario oficial antes de publicarlas. */
-const FECHAS_CAMPANA = [
-  { id: "f-preservativo", fecha: "13 de febrero", nombre: "Día Internacional del Preservativo" },
-  { id: "f-discriminacion", fecha: "1 de marzo", nombre: "Día Cero Discriminación" },
-  { id: "f-vph", fecha: "4 de marzo", nombre: "Día Internacional de Concientización sobre el VPH" },
-  { id: "f-mujeres", fecha: "28 de mayo", nombre: "Día de Acción por la Salud de las Mujeres" },
-  { id: "f-salud-sexual", fecha: "4 de septiembre", nombre: "Día Mundial de la Salud Sexual" },
-  { id: "f-embarazo", fecha: "26 de septiembre", nombre: "Día de Prevención del Embarazo no Planificado en Adolescentes" },
-  { id: "f-aborto", fecha: "28 de septiembre", nombre: "Día de Acción por el Acceso al Aborto Legal y Seguro" },
-  { id: "f-vih", fecha: "1 de diciembre", nombre: "Día Mundial de la Respuesta al VIH y el Sida" }
-];
-
-const TAREAS_VOLUNTARIADO = [
-  { id: "t-consejeria", nombre: "Consejería uno a uno en el stand" },
-  { id: "t-testeo", nombre: "Testeo rápido de VIH y sífilis" },
-  { id: "t-charlas", nombre: "Charlas breves en escuelas y terciarios" },
-  { id: "t-materiales", nombre: "Entrega de preservativos y folletería" },
-  { id: "t-derivacion", nombre: "Derivación a turnos en centros de salud" },
-  { id: "t-coordinacion", nombre: "Coordinación del equipo en la jornada" }
-];
-
-const PROVINCIAS = [
-  "CABA", "Buenos Aires", "Catamarca", "Chaco", "Chubut", "Córdoba", "Corrientes",
-  "Entre Ríos", "Formosa", "Jujuy", "La Pampa", "La Rioja", "Mendoza", "Misiones",
-  "Neuquén", "Río Negro", "Salta", "San Juan", "San Luis", "Santa Cruz", "Santa Fe",
-  "Santiago del Estero", "Tierra del Fuego", "Tucumán"
-];
-
-
-/* =========================================================
-   FORRÍN · chatbot.js
-   ========================================================= */
-
-function normalizar(texto) {
-  return texto
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .replace(/[^\w\s]/g, " ")
-    .trim();
-}
-
-function esSaludo(texto) {
-  return /\b(hola|buenas|buen dia|buenas tardes|buenas noches|hey)\b/.test(texto);
-}
-
-function esAgradecimiento(texto) {
-  return /\b(gracias|genial|perfecto|joya|buenisimo)\b/.test(texto);
-}
-
-function buscarRespuesta(mensajeUsuario) {
-  const texto = normalizar(mensajeUsuario);
-
-  if (esSaludo(texto)) {
-    return {
-      answer: "¡Hola! Soy Forrín. Puedo ayudarte con dudas sobre métodos anticonceptivos, ITS, tus derechos o dónde hacerte un análisis. ¿Qué te gustaría saber?",
-      matchedId: null
-    };
-  }
-  if (esAgradecimiento(texto)) {
-    return {
-      answer: "¡De nada! Si te surge otra duda, acá estoy. Recordá que ante una consulta médica puntual siempre es mejor hablar con un profesional de la salud.",
-      matchedId: null
-    };
-  }
-
-  let mejor = null;
-  let mejorScore = 0;
-
-  FAQ_DB.forEach(item => {
-    let score = 0;
-    item.keywords.forEach(kw => {
-      if (texto.includes(normalizar(kw))) score += 1;
-    });
-    if (score > mejorScore) {
-      mejorScore = score;
-      mejor = item;
-    }
-  });
-
-  if (mejor && mejorScore > 0) {
-    return { answer: mejor.answer, matchedId: mejor.id };
-  }
-
-  return null;
-}
-
-const RESPUESTAS_FALLBACK = [
-  "No tengo una respuesta puntual para eso todavía. Podés llamar a la Línea Salud Sexual 0800-222-3444 (gratis y confidencial) o mirar las preguntas frecuentes de abajo.",
-  "Esa consulta me excede. Un profesional de la salud en tu centro de salud u hospital más cercano puede orientarte mejor. Mirá la sección Hospitales públicos para encontrar uno."
-];
-
-function respuestaFallback() {
-  const i = Math.floor(Math.random() * RESPUESTAS_FALLBACK.length);
-  return RESPUESTAS_FALLBACK[i];
-}
-
-
-/* =========================================================
-   FORRÍN · app.js
-   ========================================================= */
-
+/* Render y Lógica */
 document.addEventListener("DOMContentLoaded", () => {
   initTabs();
   renderFAQ();
@@ -1239,69 +820,42 @@ document.addEventListener("DOMContentLoaded", () => {
   initChat();
   initFiltroHospitales();
   Mapa.init();
-  initVoluntariado();
 });
 
-/* ---------- Tabs ---------- */
 function initTabs() {
   const tabs = Array.from(document.querySelectorAll('[role="tab"]'));
   const panels = tabs.map(tab => document.getElementById(tab.getAttribute("aria-controls")));
 
-  function activar(index, { mover = false } = {}) {
-    tabs.forEach((tab, i) => {
-      const activo = i === index;
-      tab.setAttribute("aria-selected", activo ? "true" : "false");
-      tab.tabIndex = activo ? 0 : -1;
-      panels[i].hidden = !activo;
-    });
-    if (mover) tabs[index].focus();
-  }
-
   tabs.forEach((tab, index) => {
     tab.addEventListener("click", () => {
-      activar(index);
-      if (window.matchMedia("(max-width: 899px)").matches) {
-        panels[index].scrollIntoView({ block: "start" });
-      }
-    });
-
-    tab.addEventListener("keydown", (e) => {
-      let newIndex = null;
-      if (e.key === "ArrowRight" || e.key === "ArrowDown") newIndex = (index + 1) % tabs.length;
-      if (e.key === "ArrowLeft" || e.key === "ArrowUp") newIndex = (index - 1 + tabs.length) % tabs.length;
-      if (e.key === "Home") newIndex = 0;
-      if (e.key === "End") newIndex = tabs.length - 1;
-      if (newIndex !== null) {
-        e.preventDefault();
-        activar(newIndex, { mover: true });
+      tabs.forEach((t, i) => {
+        const activo = i === index;
+        t.setAttribute("aria-selected", activo ? "true" : "false");
+        t.tabIndex = activo ? 0 : -1;
+        panels[i].hidden = !activo;
+      });
+      if (tab.getAttribute("aria-controls") === "panel-hospitales") {
+        setTimeout(() => Mapa.refrescar(), 150);
       }
     });
   });
-
-  // Permite abrir una pestaña desde el chat u otros enlaces internos
-  window.abrirPanel = (panelId) => {
-    const i = tabs.findIndex(t => t.getAttribute("aria-controls") === panelId);
-    if (i >= 0) activar(i, { mover: true });
-  };
 }
 
-/* ---------- Render de contenido ---------- */
 function renderFAQ() {
   const cont = document.getElementById("faq-groups");
+  cont.innerHTML = "";
 
   FAQ_GRUPOS.forEach(grupo => {
-    const preguntas = grupo.ids
-      .map(id => FAQ_DB.find(f => f.id === id))
-      .filter(Boolean);
+    const preguntas = grupo.ids.map(id => FAQ_DB.find(f => f.id === id)).filter(Boolean);
     if (!preguntas.length) return;
 
     const details = document.createElement("details");
     details.className = "faq-group";
-    details.name = "faq";           // solo una abierta a la vez (navegadores modernos)
     if (grupo.abierto) details.open = true;
 
+    // Se eliminó la etiqueta de número del summary
     const summary = document.createElement("summary");
-    summary.innerHTML = `<span>${grupo.titulo}</span><span class="count">${preguntas.length}</span>`;
+    summary.innerHTML = `<span>${grupo.titulo}</span>`;
     details.appendChild(summary);
 
     const ul = document.createElement("ul");
@@ -1327,77 +881,42 @@ function renderFAQ() {
 
 function renderMetodos() {
   const grid = document.getElementById("metodos-grid");
+  grid.innerHTML = "";
   METODOS_DB.forEach(m => {
     const card = document.createElement("article");
     card.className = "card";
-    const tag = document.createElement("span");
-    tag.className = "tag";
-    tag.textContent = m.tag;
-    const h3 = document.createElement("h3");
-    h3.textContent = m.nombre;
-    const p = document.createElement("p");
-    p.textContent = m.desc;
-    card.append(tag, h3, p);
+    card.innerHTML = `<span class="tag">${m.tag}</span><h3>${m.nombre}</h3><p>${m.desc}</p>`;
     grid.appendChild(card);
   });
 }
 
 function renderITS() {
   const container = document.getElementById("its-content");
-  const intro = document.createElement("p");
-  intro.className = "panel-intro";
-  intro.textContent = ITS_INFO.intro;
-  container.appendChild(intro);
-
+  container.innerHTML = `<p class="panel-intro">${ITS_INFO.intro}</p>`;
   ITS_INFO.bloques.forEach(b => {
     const div = document.createElement("div");
     div.className = "info-block";
-    const h3 = document.createElement("h3");
-    h3.textContent = b.titulo;
-    const p = document.createElement("p");
-    p.textContent = b.texto;
-    div.append(h3, p);
+    div.innerHTML = `<h3>${b.titulo}</h3><p>${b.texto}</p>`;
     container.appendChild(div);
   });
 }
 
 function renderDerechos() {
   const container = document.getElementById("derechos-content");
+  container.innerHTML = "";
   DERECHOS_INFO.forEach(d => {
     const div = document.createElement("div");
     div.className = "info-block";
-    const h3 = document.createElement("h3");
-    h3.textContent = d.titulo;
-    const p = document.createElement("p");
-    p.textContent = d.texto;
-    div.append(h3, p);
+    div.innerHTML = `<h3>${d.titulo}</h3><p>${d.texto}</p>`;
     container.appendChild(div);
   });
 }
 
-function urlComoLlegar(h) {
-  return "https://www.google.com/maps/search/" + encodeURIComponent(`${h.nombre} ${h.direccion} ${h.provincia}`);
-}
-
-function filtrarHospitales(provincia) {
-  return provincia === "todas"
-    ? HOSPITALES_DB
-    : HOSPITALES_DB.filter(h => h.provincia === provincia);
-}
-
-function renderHospitales(filtroProvincia = "todas") {
+function renderHospitales(filtro = "todas") {
   const list = document.getElementById("hospitales-list");
   list.innerHTML = "";
 
-  const datos = filtrarHospitales(filtroProvincia);
-
-  if (datos.length === 0) {
-    const li = document.createElement("li");
-    li.className = "hospital-card";
-    li.textContent = "Todavía no hay centros cargados para esa provincia. Llamá al 0800-222-3444 y te orientan sobre el más cercano.";
-    list.appendChild(li);
-    return;
-  }
+  const datos = filtro === "todas" ? HOSPITALES_DB : HOSPITALES_DB.filter(h => h.provincia === filtro);
 
   datos.forEach(h => {
     const li = document.createElement("li");
@@ -1408,34 +927,26 @@ function renderHospitales(filtroProvincia = "todas") {
       <p class="meta">Tel. ${h.telefono}</p>
       <div class="services">${h.servicios.map(s => `<span>${s}</span>`).join("")}</div>
       <div class="card-actions">
-        <button type="button" class="map-link" data-hospital="${h.id}">Ver en el mapa</button>
-        <a href="${urlComoLlegar(h)}" target="_blank" rel="noopener noreferrer">Cómo llegar</a>
+        <button type="button" class="map-link" data-id="${h.id}">Ver en el mapa</button>
       </div>
     `;
     list.appendChild(li);
   });
 
   list.querySelectorAll(".map-link").forEach(btn => {
-    btn.addEventListener("click", () => Mapa.enfocar(btn.dataset.hospital));
+    btn.addEventListener("click", () => Mapa.enfocar(btn.dataset.id));
   });
 }
 
 function initFiltroHospitales() {
   const select = document.getElementById("province-filter");
-  const provincias = [...new Set(HOSPITALES_DB.map(h => h.provincia))];
-  provincias.forEach(p => {
-    const opt = document.createElement("option");
-    opt.value = p;
-    opt.textContent = p;
-    select.appendChild(opt);
-  });
   select.addEventListener("change", () => {
     renderHospitales(select.value);
     Mapa.aplicarFiltro(select.value);
   });
 }
 
-/* ---------- Mapa interactivo (Leaflet + tiles CARTO) ---------- */
+/* Controlador del Mapa */
 const Mapa = (() => {
   let map = null;
   let capa = null;
@@ -1443,40 +954,25 @@ const Mapa = (() => {
 
   function init() {
     const cont = document.getElementById("mapa");
-    if (!cont) return;
+    if (!cont || typeof L === "undefined") return;
 
-    if (typeof L === "undefined") {
-      cont.innerHTML = '<p class="map-fallback">No se pudo cargar el mapa. Usá el listado de abajo o el enlace “Cómo llegar” de cada centro.</p>';
-      return;
-    }
-
-    cont.innerHTML = "";
-    map = L.map(cont, { scrollWheelZoom: false });
+    map = L.map(cont).setView([-34.61, -58.44], 10);
 
     L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png", {
-      maxZoom: 19,
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>'
+      maxZoom: 18,
+      attribution: '&copy; OpenStreetMap &copy; CARTO'
     }).addTo(map);
 
     capa = L.layerGroup().addTo(map);
     aplicarFiltro("todas");
-
-    // El panel arranca oculto: al mostrarse hay que recalcular el tamaño
-    document.querySelectorAll('[aria-controls="panel-hospitales"]').forEach(tab => {
-      tab.addEventListener("click", () => setTimeout(() => map.invalidateSize(), 60));
-    });
   }
 
-  function aplicarFiltro(provincia) {
+  function aplicarFiltro(zona) {
     if (!map || !capa) return;
     capa.clearLayers();
     marcadores.clear();
 
-    const datos = filtrarHospitales(provincia).filter(h => h.lat && h.lng);
-    if (!datos.length) {
-      map.setView([-38.0, -63.6], 4);
-      return;
-    }
+    const datos = zona === "todas" ? HOSPITALES_DB : HOSPITALES_DB.filter(h => h.provincia === zona);
 
     const icono = L.divIcon({
       className: "",
@@ -1487,214 +983,61 @@ const Mapa = (() => {
     });
 
     datos.forEach(h => {
-      const marker = L.marker([h.lat, h.lng], { icon: icono, title: h.nombre });
-      marker.bindPopup(`
-        <strong>${h.nombre}</strong>
-        ${h.direccion} — ${h.barrio}<br>
-        Tel. ${h.telefono}<br>
-        <a href="${urlComoLlegar(h)}" target="_blank" rel="noopener noreferrer">Cómo llegar</a>
-      `);
+      const marker = L.marker([h.lat, h.lng], { icon: icono });
+      marker.bindPopup(`<strong>${h.nombre}</strong>${h.direccion}, ${h.barrio}<br>Tel: ${h.telefono}`);
       marker.addTo(capa);
       marcadores.set(h.id, marker);
     });
 
-    const bounds = L.latLngBounds(datos.map(h => [h.lat, h.lng]));
-    map.fitBounds(bounds, { padding: [40, 40], maxZoom: 14 });
+    if (datos.length) {
+      const bounds = L.latLngBounds(datos.map(h => [h.lat, h.lng]));
+      map.fitBounds(bounds, { padding: [30, 30] });
+    }
   }
 
   function enfocar(id) {
     const marker = marcadores.get(id);
-    const frame = document.querySelector(".map-frame");
     if (!map || !marker) return;
-    if (frame) frame.scrollIntoView({ block: "center" });
-    map.invalidateSize();
-    map.setView(marker.getLatLng(), 15, { animate: true });
+    document.querySelector(".map-frame").scrollIntoView({ behavior: "smooth", block: "center" });
+    map.setView(marker.getLatLng(), 14);
     marker.openPopup();
   }
 
-  return { init, aplicarFiltro, enfocar };
+  function refrescar() {
+    if (map) {
+      map.invalidateSize();
+    }
+  }
+
+  return { init, aplicarFiltro, enfocar, refrescar };
 })();
 
-/* ---------- Chat ---------- */
+/* Chat básico */
 function agregarMensaje(tipo, texto) {
-  const chatWindow = document.getElementById("chat-window");
+  const win = document.getElementById("chat-window");
   const msg = document.createElement("div");
   msg.className = `msg ${tipo}`;
   msg.textContent = texto;
-  chatWindow.appendChild(msg);
-  chatWindow.scrollTop = chatWindow.scrollHeight;
+  win.appendChild(msg);
+  win.scrollTop = win.scrollHeight;
 }
 
 function initChat() {
-  agregarMensaje("bot", "¡Hola! Soy Forrín. Preguntame lo que necesites sobre salud sexual, métodos anticonceptivos, ITS o tus derechos.");
-
+  agregarMensaje("bot", "¡Hola! Estoy acá para responder tus consultas de salud sexual de manera anónima y gratuita.");
   const form = document.getElementById("chat-form");
   const input = document.getElementById("chat-input");
 
   form.addEventListener("submit", (e) => {
     e.preventDefault();
-    const texto = input.value.trim();
-    if (!texto) return;
+    const txt = input.value.trim();
+    if (!txt) return;
 
-    agregarMensaje("user", texto);
-
-    const resultado = buscarRespuesta(texto);
-    const respuesta = resultado ? resultado.answer : respuestaFallback();
-
-    setTimeout(() => agregarMensaje("bot", respuesta), 350);
-
+    agregarMensaje("user", txt);
+    const encontrado = FAQ_DB.find(f => f.keywords.some(k => txt.toLowerCase().includes(k)));
+    const respuesta = encontrado ? encontrado.answer : "Podés comunicarte gratuitamente a la Línea de Salud Sexual al 0800-222-3444 para asesorarte en detalle.";
+    
+    setTimeout(() => agregarMensaje("bot", respuesta), 300);
     input.value = "";
-    input.focus();
-  });
-}
-
-/* ---------- Voluntariado ---------- */
-function initVoluntariado() {
-  const fechasGrid = document.getElementById("fechas-grid");
-  FECHAS_CAMPANA.forEach(f => {
-    const label = document.createElement("label");
-    label.className = "check";
-    label.setAttribute("for", f.id);
-    label.innerHTML = `
-      <input type="checkbox" id="${f.id}" name="fechas" value="${f.fecha} — ${f.nombre}">
-      <span><span class="date">${f.fecha}</span>${f.nombre}</span>
-    `;
-    fechasGrid.appendChild(label);
-  });
-
-  const tareasGrid = document.getElementById("tareas-grid");
-  TAREAS_VOLUNTARIADO.forEach(t => {
-    const label = document.createElement("label");
-    label.className = "check";
-    label.setAttribute("for", t.id);
-    label.innerHTML = `
-      <input type="checkbox" id="${t.id}" name="tareas" value="${t.nombre}">
-      <span>${t.nombre}</span>
-    `;
-    tareasGrid.appendChild(label);
-  });
-
-  const provinciaSelect = document.getElementById("v-provincia");
-  PROVINCIAS.forEach(p => {
-    const opt = document.createElement("option");
-    opt.value = p;
-    opt.textContent = p;
-    provinciaSelect.appendChild(opt);
-  });
-
-  const form = document.getElementById("volunteer-form");
-  form.addEventListener("submit", manejarEnvioVoluntariado);
-}
-
-function marcarError(campoId, errorId, mensaje) {
-  const campo = document.getElementById(campoId);
-  const error = document.getElementById(errorId);
-  if (campo) campo.setAttribute("aria-invalid", mensaje ? "true" : "false");
-  if (error) error.textContent = mensaje || "";
-}
-
-function manejarEnvioVoluntariado(e) {
-  e.preventDefault();
-  const form = e.currentTarget;
-  const status = document.getElementById("form-status");
-
-  const nombre = form.nombre.value.trim();
-  const matricula = form.matricula.value.trim();
-  const email = form.email.value.trim();
-  const provincia = form.provincia.value;
-  const fechas = Array.from(form.querySelectorAll('input[name="fechas"]:checked')).map(c => c.value);
-  const tareas = Array.from(form.querySelectorAll('input[name="tareas"]:checked')).map(c => c.value);
-  const consent = form.consent.checked;
-
-  const errores = [];
-
-  marcarError("v-nombre", "err-nombre", nombre ? "" : "Escribí tu nombre y apellido.");
-  if (!nombre) errores.push("v-nombre");
-
-  marcarError("v-matricula", "err-matricula", matricula ? "" : "Necesitamos tu número de matrícula para acreditarte.");
-  if (!matricula) errores.push("v-matricula");
-
-  const emailValido = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-  marcarError("v-email", "err-email", emailValido ? "" : "Revisá el email: ahí te mandamos el punto de encuentro.");
-  if (!emailValido) errores.push("v-email");
-
-  marcarError("v-provincia", "err-provincia", provincia ? "" : "Elegí la provincia donde podés participar.");
-  if (!provincia) errores.push("v-provincia");
-
-  document.getElementById("err-fechas").textContent = fechas.length ? "" : "Marcá al menos una fecha de campaña.";
-  if (!fechas.length) errores.push("fechas-grid");
-
-  document.getElementById("err-tareas").textContent = tareas.length ? "" : "Marcá al menos una tarea.";
-  if (!tareas.length) errores.push("tareas-grid");
-
-  marcarError("v-consent", "err-consent", consent ? "" : "Falta autorizar el uso de tus datos para coordinar la jornada.");
-  if (!consent) errores.push("v-consent");
-
-  if (errores.length) {
-    status.hidden = false;
-    status.textContent = `Faltan ${errores.length} ${errores.length === 1 ? "dato" : "datos"} para enviar la inscripción. Están marcados abajo.`;
-    const primero = document.getElementById(errores[0]);
-    if (primero) {
-      primero.scrollIntoView({ block: "center" });
-      if (primero.focus) primero.focus();
-    }
-    return;
-  }
-
-  status.hidden = true;
-  status.textContent = "";
-
-  const datos = {
-    nombre,
-    matricula,
-    especialidad: form.especialidad.value,
-    provincia,
-    email,
-    telefono: form.telefono.value.trim(),
-    turno: form.turno.value,
-    personas: form.personas.value,
-    notas: form.notas.value.trim(),
-    fechas,
-    tareas
-  };
-
-  // Acá va el POST al backend. Por ahora mostramos la confirmación en pantalla.
-  console.log("Inscripción de voluntariado:", datos);
-  mostrarConfirmacion(datos);
-}
-
-function mostrarConfirmacion(datos) {
-  const panel = document.getElementById("panel-voluntariado");
-  const layout = panel.querySelector(".volunteer-layout");
-
-  const card = document.createElement("div");
-  card.className = "success-card";
-  card.setAttribute("role", "status");
-  card.tabIndex = -1;
-  card.innerHTML = `
-    <h3>Inscripción enviada</h3>
-    <p>Gracias, ${datos.nombre}. Te vamos a escribir a <strong>${datos.email}</strong> hasta cinco días antes de cada jornada, con la sede y los materiales.</p>
-    <ul class="success-list">
-      <li><strong>Matrícula:</strong> ${datos.matricula} · ${datos.especialidad}</li>
-      <li><strong>Provincia:</strong> ${datos.provincia} · Turno ${datos.turno.toLowerCase()}</li>
-      <li><strong>Fechas:</strong> ${datos.fechas.join("; ")}</li>
-      <li><strong>Tareas:</strong> ${datos.tareas.join("; ")}</li>
-    </ul>
-    <button type="button" class="btn" id="otra-inscripcion">Cargar otra inscripción</button>
-  `;
-
-  layout.hidden = true;
-  layout.insertAdjacentElement("afterend", card);
-  card.focus();
-
-  card.querySelector("#otra-inscripcion").addEventListener("click", () => {
-    const form = document.getElementById("volunteer-form");
-    form.reset();
-    form.querySelectorAll('[aria-invalid="true"]').forEach(el => el.setAttribute("aria-invalid", "false"));
-    form.querySelectorAll(".error").forEach(el => (el.textContent = ""));
-    card.remove();
-    layout.hidden = false;
-    document.getElementById("v-nombre").focus();
   });
 }
 </script>
